@@ -69,6 +69,8 @@ namespace GamingCafeAsset_InventorySystem
 
             SelectBooking(bookingID);
 
+            CheckBookingStatus();
+
             DetectAndSelectFood(foodName);
 
             UpdateFoodSummary();
@@ -442,7 +444,41 @@ namespace GamingCafeAsset_InventorySystem
             ResultSet result =
                 db.GetQueryData(query);
         }
+        private void CheckBookingStatus()
+        {
+            DBAccessHelper db =
+                new DBAccessHelper();
 
+            string query =
+                "SELECT BookingStatus " +
+                "FROM Booking " +
+                "WHERE BookingID = " + bookingID;
+
+            ResultSet result =
+                db.GetQueryData(query);
+
+            if (!result.HasError &&
+                result.Data != null &&
+                result.Data.Rows.Count > 0)
+            {
+                string status =
+                    result.Data.Rows[0]["BookingStatus"].ToString();
+
+                if (status == "Completed" ||
+                    status == "Cancelled")
+                {
+                    btnSave.Enabled = false;
+
+                    MessageBox.Show(
+                        "This booking is already " + status +
+                        ". Food items cannot be updated.",
+                        "Editing Disabled",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+                }
+            }
+        }
         private void ResetScreen()
         {
             ResetFoodSelections();

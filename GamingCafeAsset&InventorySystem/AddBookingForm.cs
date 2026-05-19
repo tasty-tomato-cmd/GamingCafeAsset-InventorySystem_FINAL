@@ -27,6 +27,8 @@ namespace GamingCafeAsset_InventorySystem
             dtpEndTime.ValueChanged += dtpEndTime_ValueChanged;
 
             isLoading = false;
+            rbCompleted.Enabled = false;
+            rbCancel.Enabled = false;
         }
 
         public AddBookingForm(
@@ -69,6 +71,9 @@ namespace GamingCafeAsset_InventorySystem
             LoadDevices();
 
             isLoading = false;
+
+            rbCompleted.Enabled = true;
+            rbCancel.Enabled = true;
 
             UpdateTotalHours();
         }
@@ -204,9 +209,21 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             string status = "";
-            if (rbActive.Checked) status = "Active";
-            else if (rbCancel.Checked) status = "Cancelled";
-            else if (rbCompleted.Checked) status = "Completed";
+
+            if (rbActive.Checked)
+            {
+                status = "Active";
+            }
+
+            else if (rbCompleted.Checked)
+            {
+                status = "Completed";
+            }
+
+            else if (rbCancel.Checked)
+            {
+                status = "Cancelled";
+            }
 
             if (string.IsNullOrEmpty(status))
             {
@@ -273,6 +290,37 @@ namespace GamingCafeAsset_InventorySystem
 
             else
             {
+                string statusQuery =
+                    "SELECT BookingStatus " +
+                    "FROM Booking " +
+                    "WHERE BookingID = " + bookingId;
+
+                ResultSet statusResult =
+                    db.GetQueryData(statusQuery);
+
+                string currentStatus = "";
+
+                if (!statusResult.HasError &&
+                    statusResult.Data != null &&
+                    statusResult.Data.Rows.Count > 0)
+                {
+                    currentStatus =
+                        statusResult.Data.Rows[0]["BookingStatus"].ToString();
+                }
+
+                if (currentStatus == "Completed" &&
+                    status == "Active")
+                {
+                    MessageBox.Show(
+                        "Completed bookings cannot be changed back to Active.",
+                        "Invalid Status Change",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    return;
+                }
+
                 string query =
                   "UPDATE Booking SET " +
                   "StartTime = '" + startTime.ToString("yyyy-MM-dd HH:mm:ss") + "', " +
