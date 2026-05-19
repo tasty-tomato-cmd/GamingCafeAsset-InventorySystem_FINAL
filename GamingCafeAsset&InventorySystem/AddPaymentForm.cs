@@ -74,6 +74,8 @@ namespace GamingCafeAsset_InventorySystem
 
             cbBookingRef.SelectedValue = bookingID;
 
+            cbBookingRef.Enabled = false;
+
             txtBookingRef.Text =
                 bookingID.ToString();
 
