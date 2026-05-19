@@ -57,7 +57,6 @@
             this.txtPass.PasswordChar = '●';
             this.txtPass.Size = new System.Drawing.Size(556, 81);
             this.txtPass.TabIndex = 7;
-            this.txtPass.Text = "admin123";
             // 
             // txtUser
             // 
@@ -70,7 +69,6 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(556, 81);
             this.txtUser.TabIndex = 6;
-            this.txtUser.Text = "admin00";
             // 
             // lblPass
             // 
