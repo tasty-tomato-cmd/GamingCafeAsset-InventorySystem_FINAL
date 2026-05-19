@@ -128,67 +128,129 @@ namespace GamingCafeAsset_InventorySystem
         }
 
         // =====================================================
-        // LOAD CATEGORY FOODS
+        // LOAD FAST FOOD
         // =====================================================
 
         private void LoadFastFood()
         {
-            LoadFoodByCategory("Fast Food", cbFastFood);
+            cbFastFood.Items.Clear();
+
+            cbFastFood.Items.Add("");
+
+            cbFastFood.Items.Add("Burger");
+            cbFastFood.Items.Add("Pizza");
+            cbFastFood.Items.Add("Sandwich");
+            cbFastFood.Items.Add("Hot Dog");
+            cbFastFood.Items.Add("French Fries");
+
+            cbFastFood.SelectedIndex = 0;
         }
+
+        // =====================================================
+        // LOAD SNACKS
+        // =====================================================
 
         private void LoadSnacks()
         {
-            LoadFoodByCategory("Snacks", cbSnacks);
+            cbSnacks.Items.Clear();
+
+            cbSnacks.Items.Add("");
+
+            cbSnacks.Items.Add("Chips");
+            cbSnacks.Items.Add("Popcorn");
+            cbSnacks.Items.Add("Cookies");
+            cbSnacks.Items.Add("Chocolate");
+            cbSnacks.Items.Add("Cake");
+
+            cbSnacks.SelectedIndex = 0;
         }
+
+        // =====================================================
+        // LOAD DRINKS
+        // =====================================================
 
         private void LoadDrinks()
         {
-            LoadFoodByCategory("Drinks", cbDrinks);
+            cbDrinks.Items.Clear();
+
+            cbDrinks.Items.Add("");
+
+            cbDrinks.Items.Add("Coke");
+            cbDrinks.Items.Add("Pepsi");
+            cbDrinks.Items.Add("Coffee");
+            cbDrinks.Items.Add("Tea");
+            cbDrinks.Items.Add("Water");
+
+            cbDrinks.SelectedIndex = 0;
         }
 
         // =====================================================
-        // LOAD FOOD BY CATEGORY
+        // GET FOOD PRICE
         // =====================================================
 
-        private void LoadFoodByCategory(
-            string categoryName,
-            ComboBox comboBox)
+        private double GetFoodPrice(string foodName)
         {
-            DBAccessHelper db = new DBAccessHelper();
-
-            string query =
-                "SELECT DISTINCT FoodItem.FoodName " +
-                "FROM FoodItem " +
-
-                "INNER JOIN FoodItemCategory " +
-                "ON FoodItem.FoodID = FoodItemCategory.FoodID " +
-
-                "INNER JOIN FoodCategory " +
-                "ON FoodItemCategory.CategoryID = FoodCategory.CategoryID " +
-
-                "WHERE FoodCategory.CategoryName='" +
-                categoryName.Replace("'", "''") + "'";
-
-            ResultSet result = db.GetQueryData(query);
-
-            comboBox.Items.Clear();
-
-            // EMPTY OPTION
-            comboBox.Items.Add("");
-
-            if (!result.HasError &&
-                result.Data != null &&
-                result.Data.Rows.Count > 0)
+            switch (foodName)
             {
-                foreach (DataRow row in result.Data.Rows)
-                {
-                    comboBox.Items.Add(
-                        row["FoodName"].ToString()
-                    );
-                }
+                // =====================================================
+                // FAST FOOD
+                // =====================================================
+
+                case "Burger":
+                    return 250;
+
+                case "Pizza":
+                    return 500;
+
+                case "Sandwich":
+                    return 180;
+
+                case "Hot Dog":
+                    return 150;
+
+                case "French Fries":
+                    return 120;
+
+                // =====================================================
+                // SNACKS
+                // =====================================================
+
+                case "Chips":
+                    return 50;
+
+                case "Popcorn":
+                    return 80;
+
+                case "Cookies":
+                    return 100;
+
+                case "Chocolate":
+                    return 120;
+
+                case "Cake":
+                    return 200;
+
+                // =====================================================
+                // DRINKS
+                // =====================================================
+
+                case "Coke":
+                    return 40;
+
+                case "Pepsi":
+                    return 40;
+
+                case "Coffee":
+                    return 120;
+
+                case "Tea":
+                    return 60;
+
+                case "Water":
+                    return 25;
             }
 
-            comboBox.SelectedIndex = 0;
+            return 0;
         }
 
         // =====================================================
@@ -280,37 +342,6 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             txtFoodName.Text = foods;
-        }
-
-        // =====================================================
-        // GET FOOD PRICE
-        // =====================================================
-
-        private double GetFoodPrice(string foodName)
-        {
-            if (string.IsNullOrWhiteSpace(foodName))
-                return 0;
-
-            DBAccessHelper db = new DBAccessHelper();
-
-            string query =
-                "SELECT TOP 1 Price " +
-                "FROM FoodItem " +
-                "WHERE FoodName LIKE '%" +
-                foodName.Replace("'", "''") + "%'";
-
-            ResultSet result = db.GetQueryData(query);
-
-            if (!result.HasError &&
-                result.Data != null &&
-                result.Data.Rows.Count > 0)
-            {
-                return Convert.ToDouble(
-                    result.Data.Rows[0]["Price"]
-                );
-            }
-
-            return 0;
         }
 
         // =====================================================
