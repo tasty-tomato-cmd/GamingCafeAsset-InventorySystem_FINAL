@@ -60,7 +60,7 @@ namespace GamingCafeAsset_InventorySystem
                 HideButtonRow(btnDevices);
                 HideButtonRow(btnGames);
 
-                btnUpdate.Enabled = false;
+                btnUpdate.Enabled = true;
 
                 btnDelete.Enabled = false;
             }
