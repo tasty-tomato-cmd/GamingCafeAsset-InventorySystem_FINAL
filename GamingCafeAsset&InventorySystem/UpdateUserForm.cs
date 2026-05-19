@@ -253,6 +253,18 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
+            if (!PhoneEmailValidation.IsValidEmail(email))
+            {
+                MessageBox.Show(
+                  "Please enter a valid email address.",
+                  "Invalid Email",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
 
             int userTypeID = 0;
 
@@ -336,7 +348,7 @@ namespace GamingCafeAsset_InventorySystem
             int isActive = rbtnActive.Checked ? 1 : 0;
 
 
-            if (!phone.All(char.IsDigit) || phone.Length != 11)
+            if (!PhoneEmailValidation.IsValidPhone(phone))
             {
                 MessageBox.Show(
                   "Phone number must be exactly 11 digits.",

@@ -185,6 +185,18 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
+            if (!PhoneEmailValidation.IsValidPhone(phone))
+            {
+                MessageBox.Show(
+                    "Phone number must be exactly 11 digits!",
+                    "Invalid Phone Number",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
             if (endTime <= startTime)
             {
                 MessageBox.Show("End time must be greater than start time!");

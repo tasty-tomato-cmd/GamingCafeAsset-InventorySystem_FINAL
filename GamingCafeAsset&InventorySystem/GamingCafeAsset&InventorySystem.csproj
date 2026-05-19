@@ -79,6 +79,7 @@
     <Compile Include="AddFoodItemFrom.Designer.cs">
       <DependentUpon>AddFoodItemFrom.cs</DependentUpon>
     </Compile>
+    <Compile Include="PhoneEmailValidation.cs" />
     <Compile Include="UpdateUserForm.cs">
       <SubType>Form</SubType>
     </Compile>

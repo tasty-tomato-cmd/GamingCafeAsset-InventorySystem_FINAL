@@ -139,9 +139,60 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            if (!double.TryParse(hourly, out double hourlyRate))
+            if (!int.TryParse(location, out int locationNumber) || locationNumber <= 0)
             {
-                MessageBox.Show("Invalid hourly rate!");
+                MessageBox.Show(
+                    "Location number must be a positive number!",
+                    "Invalid Location",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
+            if (!double.TryParse(hourly, out double hourlyRate) || hourlyRate <= 0)
+            {
+                MessageBox.Show(
+                    "Hourly rate must be a positive number!",
+                    "Invalid Hourly Rate",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
+            DBAccessHelper db = new DBAccessHelper();
+
+            string locationCheckQuery;
+
+            if (!isUpdateMode)
+            {
+                locationCheckQuery =
+    "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" + locationNumber + "'";
+            }
+
+            else
+            {
+                locationCheckQuery =
+    "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" +
+    locationNumber +
+    "' AND DeviceID != " + deviceID;
+            }
+
+            ResultSet locationCheck = db.GetQueryData(locationCheckQuery);
+
+            if (locationCheck.Data != null &&
+                Convert.ToInt32(locationCheck.Data.Rows[0][0]) > 0)
+            {
+                MessageBox.Show(
+                    "Location number already exists!",
+                    "Duplicate Location",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
                 return;
             }
 
@@ -159,8 +210,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            DBAccessHelper db = new DBAccessHelper();
-
             if (!isUpdateMode)
             {
 
@@ -170,7 +219,7 @@ namespace GamingCafeAsset_InventorySystem
                   "VALUES ('" +
                   name.Replace("'", "''") + "', '" +
                   status + "', '" +
-                  location.Replace("'", "''") + "', " +
+                  locationNumber + "', " +
                   hourlyRate + ")";
 
                 ResultSet result = db.ExecuteNonQuery(query);
@@ -213,7 +262,7 @@ namespace GamingCafeAsset_InventorySystem
                   "UPDATE Device SET " +
                   "DeviceName = '" + name.Replace("'", "''") + "', " +
                   "Status = '" + status + "', " +
-                  "LocationNumber = '" + location.Replace("'", "''") + "', " +
+                  "LocationNumber = " + locationNumber + ", " +
                   "HourlyRate = " + hourlyRate + " " +
                   "WHERE DeviceID = " + deviceID;
 

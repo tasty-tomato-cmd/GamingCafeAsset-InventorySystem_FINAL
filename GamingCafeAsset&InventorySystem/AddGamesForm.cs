@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GamingCafeAsset_InventorySystem
@@ -132,9 +133,14 @@ namespace GamingCafeAsset_InventorySystem
             string gameName = txtGameName.Text.Trim();
             string genre = txtGenre.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(gameName))
+            if (gameName.Length < 2 || gameName.All(char.IsDigit) || string.IsNullOrWhiteSpace(gameName))
             {
-                MessageBox.Show("Game name is required!");
+                MessageBox.Show(
+                    "Please enter a valid game name!",
+                    "Invalid Game Name",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
                 return;
             }
 
