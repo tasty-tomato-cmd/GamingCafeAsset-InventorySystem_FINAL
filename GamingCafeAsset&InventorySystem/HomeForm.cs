@@ -351,49 +351,79 @@ namespace GamingCafeAsset_InventorySystem
 
             ResetButtonColors();
 
-            btnDashboard.BackColor = Color.FromArgb(75, 100, 145);
+            btnDashboard.BackColor =
+                Color.FromArgb(75, 100, 145);
 
             LoadData(
-              "SELECT " +
-              "Device.DeviceName AS [Device], " +
 
-              "CASE " +
-              "WHEN Device.Status = 'Available' THEN 'No Current Customer' " +
-              "ELSE ISNULL(B.CustomerName, 'Unknown') " +
-              "END AS [Current Customer], " +
+                "SELECT " +
 
-              "Device.Status AS [Status], " +
+                "Device.DeviceName AS [Device], " +
 
-              "CASE " +
-              "WHEN B.BookingStatus = 'Active' " +
-              "THEN CONVERT(VARCHAR, B.EndTime, 100) " +
-              "ELSE 'N/A' " +
-              "END AS [Session Ends], " +
+                "CASE " +
+                "WHEN Device.Status = 'Available' THEN 'No Current Customer' " +
+                "ELSE ISNULL(B.CustomerName, 'Unknown') " +
+                "END AS [Current Customer], " +
 
-              "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) AS [Hourly Rate], " +
+                "Device.Status AS [Status], " +
 
-              "ISNULL(Games.GameName, 'No Game Assigned') AS [Current Game] " +
+                "CASE " +
+                "WHEN B.BookingStatus = 'Active' " +
+                "THEN CONVERT(VARCHAR, B.EndTime, 100) " +
+                "ELSE 'N/A' " +
+                "END AS [Session Ends], " +
 
-              "FROM Device " +
+                "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) " +
+                "AS [Hourly Rate], " +
 
-              "OUTER APPLY (" +
-              "SELECT TOP 1 * FROM Booking " +
-              "WHERE Booking.DeviceID = Device.DeviceID " +
-              "ORDER BY CASE WHEN Booking.BookingStatus = 'Active' THEN 1 ELSE 2 END, Booking.BookingID DESC" +
-              ") B " +
+                // =====================================================
+                // COMBINE GAMES
+                // =====================================================
 
-              "LEFT JOIN DeviceGames ON Device.DeviceID = DeviceGames.DeviceID " +
-              "LEFT JOIN Games ON DeviceGames.GameID = Games.GameID " +
+                "ISNULL(GameList.Games, 'No Game Assigned') " +
+                "AS [Current Games] " +
 
-              "WHERE Device.Status IN ('Available', 'Occupied', 'Reserved') " +
+                "FROM Device " +
 
-              "ORDER BY " +
-              "CASE " +
-              "WHEN Device.Status = 'Occupied' THEN 1 " +
-              "WHEN Device.Status = 'Reserved' THEN 2 " +
-              "ELSE 3 " +
-              "END, " +
-              "Device.DeviceName"
+                // =====================================================
+                // CURRENT BOOKING
+                // =====================================================
+
+                "OUTER APPLY ( " +
+                "SELECT TOP 1 * FROM Booking " +
+                "WHERE Booking.DeviceID = Device.DeviceID " +
+                "ORDER BY " +
+                "CASE " +
+                "WHEN Booking.BookingStatus = 'Active' THEN 1 " +
+                "ELSE 2 " +
+                "END, " +
+                "Booking.BookingID DESC " +
+                ") B " +
+
+                // =====================================================
+                // COMBINE ALL GAMES INTO ONE ROW
+                // =====================================================
+
+                "OUTER APPLY ( " +
+                "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
+                "FROM DeviceGames " +
+                "INNER JOIN Games " +
+                "ON DeviceGames.GameID = Games.GameID " +
+                "WHERE DeviceGames.DeviceID = Device.DeviceID " +
+                ") GameList " +
+
+                "WHERE Device.Status IN " +
+                "('Available', 'Occupied', 'Reserved') " +
+
+                "ORDER BY " +
+
+                "CASE " +
+                "WHEN Device.Status = 'Occupied' THEN 1 " +
+                "WHEN Device.Status = 'Reserved' THEN 2 " +
+                "ELSE 3 " +
+                "END, " +
+
+                "Device.DeviceName"
             );
         }
 
@@ -545,29 +575,62 @@ namespace GamingCafeAsset_InventorySystem
                       "ELSE 'N/A' " +
                       "END AS [Session Ends], " +
 
-                      "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) AS [Hourly Rate], " +
+                      "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) " +
+                      "AS [Hourly Rate], " +
 
-                      "ISNULL(Games.GameName, 'No Game Assigned') AS [Current Game] " +
+                      "ISNULL(GameList.Games, 'No Game Assigned') " +
+                      "AS [Current Games] " +
 
                       "FROM Device " +
 
-                      "OUTER APPLY (" +
+                      // =====================================================
+                      // CURRENT BOOKING
+                      // =====================================================
+
+                      "OUTER APPLY ( " +
                       "SELECT TOP 1 * FROM Booking " +
                       "WHERE Booking.DeviceID = Device.DeviceID " +
-                      "ORDER BY CASE WHEN Booking.BookingStatus = 'Active' THEN 1 ELSE 2 END, Booking.BookingID DESC" +
+                      "ORDER BY " +
+                      "CASE " +
+                      "WHEN Booking.BookingStatus = 'Active' THEN 1 " +
+                      "ELSE 2 " +
+                      "END, " +
+                      "Booking.BookingID DESC " +
                       ") B " +
 
-                      "LEFT JOIN DeviceGames ON Device.DeviceID = DeviceGames.DeviceID " +
-                      "LEFT JOIN Games ON DeviceGames.GameID = Games.GameID " +
+                      // =====================================================
+                      // COMBINE GAMES
+                      // =====================================================
+
+                      "OUTER APPLY ( " +
+                      "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
+                      "FROM DeviceGames " +
+                      "INNER JOIN Games " +
+                      "ON DeviceGames.GameID = Games.GameID " +
+                      "WHERE DeviceGames.DeviceID = Device.DeviceID " +
+                      ") GameList " +
+
+                      // =====================================================
+                      // SEARCH
+                      // =====================================================
 
                       "WHERE " +
 
                       "Device.DeviceName LIKE '%" + searchText + "%' OR " +
+
                       "Device.Status LIKE '%" + searchText + "%' OR " +
+
                       "ISNULL(B.CustomerName, 'Unknown') LIKE '%" + searchText + "%' OR " +
-                      "ISNULL(Games.GameName, 'No Game Assigned') LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(GameList.Games, 'No Game Assigned') LIKE '%" + searchText + "%' OR " +
+
                       "CAST(Device.HourlyRate AS VARCHAR) LIKE '%" + searchText + "%' OR " +
+
                       "ISNULL(B.BookingStatus, '') LIKE '%" + searchText + "%' " +
+
+                      // =====================================================
+                      // ORDER
+                      // =====================================================
 
                       "ORDER BY " +
 
@@ -580,6 +643,7 @@ namespace GamingCafeAsset_InventorySystem
                       "Device.DeviceName";
 
                     break;
+
 
                 case "Users":
 
