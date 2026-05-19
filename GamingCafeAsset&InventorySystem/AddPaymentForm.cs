@@ -458,6 +458,29 @@ namespace GamingCafeAsset_InventorySystem
 
             else
             {
+                ResultSet statusResult = db.GetQueryData("SELECT PaymentStatus " + "FROM Payment " + "WHERE PaymentID=" + paymentID);
+
+                if (!statusResult.HasError &&
+                    statusResult.Data != null &&
+                    statusResult.Data.Rows.Count > 0)
+                {
+                    string currentStatus =
+                        statusResult.Data.Rows[0]["PaymentStatus"].ToString();
+
+                    if (currentStatus == "Paid" ||
+                        currentStatus == "Refunded")
+                    {
+                        MessageBox.Show(
+                            "Paid or refunded payments cannot be changed.",
+                            "Update Blocked",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
+                    }
+                }
+
                 string updateQuery =
                     "UPDATE Payment SET " +
 

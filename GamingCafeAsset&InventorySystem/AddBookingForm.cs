@@ -308,11 +308,10 @@ namespace GamingCafeAsset_InventorySystem
                         statusResult.Data.Rows[0]["BookingStatus"].ToString();
                 }
 
-                if (currentStatus == "Completed" &&
-                    status == "Active")
+                if (currentStatus == "Completed" || currentStatus == "Cancelled")
                 {
                     MessageBox.Show(
-                        "Completed bookings cannot be changed back to Active.",
+                        "Completed or cancelled bookings cannot be changed.",
                         "Invalid Status Change",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning
