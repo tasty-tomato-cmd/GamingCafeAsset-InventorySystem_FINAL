@@ -140,23 +140,59 @@ namespace GamingCafeAsset_InventorySystem
             DBAccessHelper db =
                 new DBAccessHelper();
 
-            string query =
-                "SELECT " +
+            string query = "";
 
-                "Booking.BookingID, " +
+            // =====================================================
+            // CREATE MODE
+            // =====================================================
 
-                "CAST(Booking.BookingID AS VARCHAR) + " +
-                "' - ' + " +
-                "Booking.CustomerName + " +
-                "' - ' + " +
-                "Device.DeviceName " +
+            if (!isUpdateMode)
+            {
+                query =
+                    "SELECT " +
 
-                "AS BookingInfo " +
+                    "Booking.BookingID, " +
 
-                "FROM Booking " +
+                    "CAST(Booking.BookingID AS VARCHAR) + " +
+                    "' - ' + " +
+                    "Booking.CustomerName + " +
+                    "' - ' + " +
+                    "Device.DeviceName " +
 
-                "INNER JOIN Device " +
-                "ON Booking.DeviceID = Device.DeviceID";
+                    "AS BookingInfo " +
+
+                    "FROM Booking " +
+
+                    "INNER JOIN Device " +
+                    "ON Booking.DeviceID = Device.DeviceID " +
+
+                    "WHERE Booking.BookingStatus='Active'";
+            }
+
+            // =====================================================
+            // UPDATE MODE
+            // =====================================================
+
+            else
+            {
+                query =
+                    "SELECT " +
+
+                    "Booking.BookingID, " +
+
+                    "CAST(Booking.BookingID AS VARCHAR) + " +
+                    "' - ' + " +
+                    "Booking.CustomerName + " +
+                    "' - ' + " +
+                    "Device.DeviceName " +
+
+                    "AS BookingInfo " +
+
+                    "FROM Booking " +
+
+                    "INNER JOIN Device " +
+                    "ON Booking.DeviceID = Device.DeviceID";
+            }
 
             ResultSet result =
                 db.GetQueryData(query);
@@ -551,6 +587,10 @@ namespace GamingCafeAsset_InventorySystem
             string deviceStatus =
                 "Available";
 
+            // =====================================================
+            // PENDING
+            // =====================================================
+
             if (paymentStatus == "Pending")
             {
                 bookingStatus =
@@ -560,6 +600,10 @@ namespace GamingCafeAsset_InventorySystem
                     "Occupied";
             }
 
+            // =====================================================
+            // REFUNDED
+            // =====================================================
+
             else if (paymentStatus == "Refunded")
             {
                 bookingStatus =
@@ -568,6 +612,10 @@ namespace GamingCafeAsset_InventorySystem
                 deviceStatus =
                     "Available";
             }
+
+            // =====================================================
+            // PAID
+            // =====================================================
 
             else if (paymentStatus == "Paid")
             {
