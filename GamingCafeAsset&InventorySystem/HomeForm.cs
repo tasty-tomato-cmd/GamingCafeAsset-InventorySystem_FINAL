@@ -40,37 +40,42 @@ namespace GamingCafeAsset_InventorySystem
             LoadDashboard();
         }
 
-
         private void SetPermissions()
         {
             if (currentUser.UserTypeName == "Admin")
             {
 
             }
+
             else if (currentUser.UserTypeName == "Manager")
             {
-                int row = tblpnlBtns.GetRow(btnUsers);
-
-                btnUsers.Visible = false;
-
-                tblpnlBtns.RowStyles[row].Height = 0;
-                tblpnlBtns.RowStyles[row].SizeType = SizeType.Absolute;
+                HideButtonRow(btnUsers);
 
                 btnDelete.Enabled = false;
             }
+
             else if (currentUser.UserTypeName == "Staff")
             {
-                int row = tblpnlBtns.GetRow(btnUsers);
-
-                btnUsers.Visible = false;
-
-                tblpnlBtns.RowStyles[row].Height = 0;
-                tblpnlBtns.RowStyles[row].SizeType = SizeType.Absolute;
+                HideButtonRow(btnUsers);
+                HideButtonRow(btnDevices);
+                HideButtonRow(btnGames);
 
                 btnUpdate.Enabled = false;
 
                 btnDelete.Enabled = false;
             }
+        }
+        private void HideButtonRow(Button button)
+        {
+            int row =
+                tblpnlBtns.GetRow(button);
+
+            button.Visible = false;
+
+            tblpnlBtns.RowStyles[row].Height = 0;
+
+            tblpnlBtns.RowStyles[row].SizeType =
+                SizeType.Absolute;
         }
 
 
