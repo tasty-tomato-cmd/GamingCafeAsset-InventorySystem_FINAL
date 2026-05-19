@@ -6,19 +6,12 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class AddPaymentForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
 
         private LoggedInUser currentUser;
 
         private bool isUpdateMode = false;
 
         private int paymentID;
-
-        // =====================================================
-        // CREATE MODE
-        // =====================================================
 
         public AddPaymentForm(
             LoggedInUser user)
@@ -34,10 +27,6 @@ namespace GamingCafeAsset_InventorySystem
 
             ResetScreen();
         }
-
-        // =====================================================
-        // UPDATE MODE
-        // =====================================================
 
         public AddPaymentForm(
             LoggedInUser user,
@@ -67,10 +56,6 @@ namespace GamingCafeAsset_InventorySystem
             PaymentEvents();
 
             btnCreate.Text = "UPDATE PAYMENT";
-
-            // =====================================================
-            // SET VALUES
-            // =====================================================
 
             cbBookingRef.SelectedValue = bookingID;
 
@@ -103,10 +88,6 @@ namespace GamingCafeAsset_InventorySystem
             dtpDop.Value =
                 paymentDate;
 
-            // =====================================================
-            // STATUS
-            // =====================================================
-
             if (paymentStatus == "Paid")
             {
                 rbtnPaid.Checked = true;
@@ -123,19 +104,11 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // EVENTS
-        // =====================================================
-
         private void PaymentEvents()
         {
             cbBookingRef.SelectedIndexChanged +=
                 cbBookingRef_SelectedIndexChanged;
         }
-
-        // =====================================================
-        // LOAD ACTIVE BOOKINGS
-        // =====================================================
 
         private void LoadActiveBookings()
         {
@@ -143,10 +116,6 @@ namespace GamingCafeAsset_InventorySystem
                 new DBAccessHelper();
 
             string query = "";
-
-            // =====================================================
-            // CREATE MODE
-            // =====================================================
 
             if (!isUpdateMode)
             {
@@ -170,10 +139,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     "WHERE Booking.BookingStatus='Active'";
             }
-
-            // =====================================================
-            // UPDATE MODE
-            // =====================================================
 
             else
             {
@@ -215,10 +180,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // LOAD PAYMENT METHODS
-        // =====================================================
-
         private void LoadPaymentMethods()
         {
             cbPaymentMethods.Items.Clear();
@@ -231,10 +192,6 @@ namespace GamingCafeAsset_InventorySystem
 
             cbPaymentMethods.SelectedIndex = -1;
         }
-
-        // =====================================================
-        // BOOKING CHANGE EVENT
-        // =====================================================
 
         private void cbBookingRef_SelectedIndexChanged(
             object sender,
@@ -256,10 +213,6 @@ namespace GamingCafeAsset_InventorySystem
                 bookingID
             );
         }
-
-        // =====================================================
-        // LOAD BOOKING DETAILS
-        // =====================================================
 
         private void LoadBookingDetails(
             int bookingID)
@@ -317,10 +270,6 @@ namespace GamingCafeAsset_InventorySystem
             double deviceCharge =
                 totalHours * hourlyRate;
 
-            // =====================================================
-            // FOOD CHARGE
-            // =====================================================
-
             double foodCharge = 0;
 
             string foodQuery =
@@ -346,16 +295,8 @@ namespace GamingCafeAsset_InventorySystem
                     );
             }
 
-            // =====================================================
-            // TOTAL
-            // =====================================================
-
             double totalAmount =
                 deviceCharge + foodCharge;
-
-            // =====================================================
-            // SHOW DETAILS
-            // =====================================================
 
             txtBookingRef.Text =
                 bookingID.ToString();
@@ -379,17 +320,10 @@ namespace GamingCafeAsset_InventorySystem
                 totalAmount.ToString("0.00");
         }
 
-        // =====================================================
-        // CREATE / UPDATE PAYMENT
-        // =====================================================
-
         private void btnCreate_Click(
             object sender,
             EventArgs e)
         {
-            // =====================================================
-            // VALIDATION
-            // =====================================================
 
             if (cbBookingRef.SelectedValue == null)
             {
@@ -408,10 +342,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 return;
             }
-
-            // =====================================================
-            // PAYMENT STATUS
-            // =====================================================
 
             string paymentStatus = "";
 
@@ -439,10 +369,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // VALUES
-            // =====================================================
-
             int bookingID =
                 Convert.ToInt32(
                     cbBookingRef.SelectedValue
@@ -467,10 +393,6 @@ namespace GamingCafeAsset_InventorySystem
             DBAccessHelper db =
                 new DBAccessHelper();
 
-            // =====================================================
-            // GET DEVICE ID
-            // =====================================================
-
             int deviceID = 0;
 
             ResultSet deviceResult =
@@ -491,10 +413,6 @@ namespace GamingCafeAsset_InventorySystem
                         deviceResult.Data.Rows[0]["DeviceID"]
                     );
             }
-
-            // =====================================================
-            // INSERT MODE
-            // =====================================================
 
             if (!isUpdateMode)
             {
@@ -538,10 +456,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
 
-            // =====================================================
-            // UPDATE MODE
-            // =====================================================
-
             else
             {
                 string updateQuery =
@@ -579,19 +493,11 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
 
-            // =====================================================
-            // STATUS HANDLING
-            // =====================================================
-
             string bookingStatus =
                 "Completed";
 
             string deviceStatus =
                 "Available";
-
-            // =====================================================
-            // PENDING
-            // =====================================================
 
             if (paymentStatus == "Pending")
             {
@@ -602,10 +508,6 @@ namespace GamingCafeAsset_InventorySystem
                     "Occupied";
             }
 
-            // =====================================================
-            // REFUNDED
-            // =====================================================
-
             else if (paymentStatus == "Refunded")
             {
                 bookingStatus =
@@ -615,10 +517,6 @@ namespace GamingCafeAsset_InventorySystem
                     "Available";
             }
 
-            // =====================================================
-            // PAID
-            // =====================================================
-
             else if (paymentStatus == "Paid")
             {
                 bookingStatus =
@@ -627,10 +525,6 @@ namespace GamingCafeAsset_InventorySystem
                 deviceStatus =
                     "Available";
             }
-
-            // =====================================================
-            // UPDATE BOOKING
-            // =====================================================
 
             db.ExecuteNonQuery(
 
@@ -643,10 +537,6 @@ namespace GamingCafeAsset_InventorySystem
                 bookingID
             );
 
-            // =====================================================
-            // UPDATE DEVICE
-            // =====================================================
-
             db.ExecuteNonQuery(
 
                 "UPDATE Device SET " +
@@ -657,10 +547,6 @@ namespace GamingCafeAsset_InventorySystem
                 "WHERE DeviceID=" +
                 deviceID
             );
-
-            // =====================================================
-            // SUCCESS
-            // =====================================================
 
             if (!isUpdateMode)
             {
@@ -686,10 +572,6 @@ namespace GamingCafeAsset_InventorySystem
 
             this.Close();
         }
-
-        // =====================================================
-        // RESET SCREEN
-        // =====================================================
 
         private void ResetScreen()
         {
@@ -717,20 +599,12 @@ namespace GamingCafeAsset_InventorySystem
                 DateTime.Now;
         }
 
-        // =====================================================
-        // RESET BUTTON
-        // =====================================================
-
         private void btnReset_Click(
             object sender,
             EventArgs e)
         {
             ResetScreen();
         }
-
-        // =====================================================
-        // CANCEL BUTTON
-        // =====================================================
 
         private void btnCancel_Click(
             object sender,

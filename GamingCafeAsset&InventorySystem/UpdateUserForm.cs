@@ -13,17 +13,11 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class UpdateUserForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
+        
 
         private int userID;
 
         private bool isEditingAdmin = false;
-
-        // =====================================================
-        // CONSTRUCTOR
-        // =====================================================
 
         public UpdateUserForm(
           int id,
@@ -40,15 +34,8 @@ namespace GamingCafeAsset_InventorySystem
         {
             InitializeComponent();
 
-            // =====================================================
-            // USER ID
-            // =====================================================
 
             userID = id;
-
-            // =====================================================
-            // LOAD EXISTING DATA
-            // =====================================================
 
             txtUser.Text = username;
 
@@ -68,9 +55,6 @@ namespace GamingCafeAsset_InventorySystem
 
             dtpDob.Value = dob;
 
-            // =====================================================
-            // STATUS
-            // =====================================================
 
             if (role == "Admin")
             {
@@ -87,33 +71,20 @@ namespace GamingCafeAsset_InventorySystem
                 rbtnInactive.Checked = true;
             }
 
-            // =====================================================
-            // BUTTON TEXT
-            // =====================================================
-
             btnCreate.Text = "UPDATE ACCOUNT";
 
-            // =====================================================
-            // PASSWORD HINT LABEL
-            // =====================================================
 
             lblPasswordHint.Text = "Leave blank to keep current password.";
 
             lblPasswordHint.ForeColor = Color.WhiteSmoke;
         }
 
-        // =====================================================
-        // CANCEL BUTTON
-        // =====================================================
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // =====================================================
-        // RESET BUTTON
-        // =====================================================
 
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -150,9 +121,6 @@ namespace GamingCafeAsset_InventorySystem
             txtUser.Focus();
         }
 
-        // =====================================================
-        // PASSWORD VISIBILITY
-        // =====================================================
 
         private void btnHidepass_Click(object sender, EventArgs e)
         {
@@ -174,9 +142,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // PASSWORD VALIDATION
-        // =====================================================
 
         private bool IsValidPassword(string password)
         {
@@ -206,9 +171,6 @@ namespace GamingCafeAsset_InventorySystem
 
         private void txtPass_TextChanged(object sender, EventArgs e)
         {
-            // =====================================================
-            // EMPTY PASSWORD
-            // =====================================================
 
             if (string.IsNullOrWhiteSpace(txtPass.Text))
             {
@@ -220,9 +182,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // VALID PASSWORD
-            // =====================================================
             else if (IsValidPassword(txtPass.Text))
             {
                 lblPasswordHint.Text = "Strong password ✔";
@@ -230,9 +189,6 @@ namespace GamingCafeAsset_InventorySystem
                 lblPasswordHint.ForeColor = Color.LightGreen;
             }
 
-            // =====================================================
-            // INVALID PASSWORD
-            // =====================================================
             else
             {
                 lblPasswordHint.Text =
@@ -242,15 +198,9 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // UPDATE USER BUTTON
-        // =====================================================
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            // =====================================================
-            // INPUT VALUES
-            // =====================================================
 
             string username = txtUser.Text.Trim();
 
@@ -269,10 +219,6 @@ namespace GamingCafeAsset_InventorySystem
             string role = cbRoles.Text;
 
             DateTime dob = dtpDob.Value;
-
-            // =====================================================
-            // EMPTY FIELD CHECK
-            // =====================================================
 
             if (
               username == "" ||
@@ -294,9 +240,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // PASSWORD VALIDATION
-            // =====================================================
 
             if (!string.IsNullOrWhiteSpace(password) && !IsValidPassword(password))
             {
@@ -310,9 +253,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // USER ROLE ID
-            // =====================================================
 
             int userTypeID = 0;
 
@@ -337,15 +277,9 @@ namespace GamingCafeAsset_InventorySystem
                     break;
             }
 
-            // =====================================================
-            // DATABASE OBJECT
-            // =====================================================
 
             DBAccessHelper db = new DBAccessHelper();
 
-            // =====================================================
-            // DUPLICATE USERNAME CHECK
-            // =====================================================
 
             ResultSet checkUser = db.GetQueryData(
 
@@ -366,9 +300,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // DUPLICATE EMAIL CHECK
-            // =====================================================
 
             ResultSet checkEmail = db.GetQueryData(
 
@@ -389,9 +320,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // STATUS CHECK
-            // =====================================================
 
             if (!rbtnActive.Checked && !rbtnInactive.Checked)
             {
@@ -407,9 +335,6 @@ namespace GamingCafeAsset_InventorySystem
 
             int isActive = rbtnActive.Checked ? 1 : 0;
 
-            // =====================================================
-            // PHONE NUMBER VALIDATION
-            // =====================================================
 
             if (!phone.All(char.IsDigit) || phone.Length != 11)
             {
@@ -423,9 +348,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // UPDATE QUERY
-            // =====================================================
 
             string query = "";
 
@@ -467,15 +389,9 @@ namespace GamingCafeAsset_InventorySystem
                   "WHERE UserID = " + userID;
             }
 
-            // =====================================================
-            // EXECUTE QUERY
-            // =====================================================
 
             ResultSet result = db.ExecuteNonQuery(query);
 
-            // =====================================================
-            // ERROR CHECK
-            // =====================================================
 
             if (result.HasError)
             {
@@ -489,9 +405,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // SUCCESS MESSAGE
-            // =====================================================
 
             MessageBox.Show(
               "User updated successfully.",
@@ -505,9 +418,6 @@ namespace GamingCafeAsset_InventorySystem
 
         private void cbRoles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // =====================================================
-            // EDITING EXISTING ADMIN USER
-            // =====================================================
             if (isEditingAdmin)
             {
                 if (cbRoles.Text != "Admin")
@@ -527,9 +437,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =====================================================
-            // USER TRYING TO SELECT ADMIN
-            // =====================================================
             if (cbRoles.Text == "Admin")
             {
                 MessageBox.Show(

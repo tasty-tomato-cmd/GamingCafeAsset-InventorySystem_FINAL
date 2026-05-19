@@ -6,9 +6,6 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class AddFoodItemForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
 
         private LoggedInUser currentUser;
 
@@ -17,9 +14,6 @@ namespace GamingCafeAsset_InventorySystem
         private int foodID;
         private int bookingID;
 
-        // =====================================================
-        // CREATE MODE
-        // =====================================================
 
         public AddFoodItemForm(LoggedInUser user)
         {
@@ -43,9 +37,6 @@ namespace GamingCafeAsset_InventorySystem
             UpdateFoodPrice();
         }
 
-        // =====================================================
-        // UPDATE MODE
-        // =====================================================
 
         public AddFoodItemForm(
             LoggedInUser user,
@@ -84,10 +75,6 @@ namespace GamingCafeAsset_InventorySystem
             UpdateFoodPrice();
         }
 
-        // =====================================================
-        // EVENTS
-        // =====================================================
-
         private void foodItem()
         {
             cbFastFood.SelectedIndexChanged += cbFastFood_SelectedIndexChanged;
@@ -99,9 +86,6 @@ namespace GamingCafeAsset_InventorySystem
             cbCustomer.SelectedIndexChanged += cbCustomer_SelectedIndexChanged;
         }
 
-        // =====================================================
-        // LOAD ACTIVE BOOKINGS
-        // =====================================================
 
         private void LoadActiveBookings()
         {
@@ -127,10 +111,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // LOAD FAST FOOD
-        // =====================================================
-
         private void LoadFastFood()
         {
             cbFastFood.Items.Clear();
@@ -145,10 +125,6 @@ namespace GamingCafeAsset_InventorySystem
 
             cbFastFood.SelectedIndex = 0;
         }
-
-        // =====================================================
-        // LOAD SNACKS
-        // =====================================================
 
         private void LoadSnacks()
         {
@@ -165,10 +141,6 @@ namespace GamingCafeAsset_InventorySystem
             cbSnacks.SelectedIndex = 0;
         }
 
-        // =====================================================
-        // LOAD DRINKS
-        // =====================================================
-
         private void LoadDrinks()
         {
             cbDrinks.Items.Clear();
@@ -184,17 +156,10 @@ namespace GamingCafeAsset_InventorySystem
             cbDrinks.SelectedIndex = 0;
         }
 
-        // =====================================================
-        // GET FOOD PRICE
-        // =====================================================
-
         private double GetFoodPrice(string foodName)
         {
             switch (foodName)
             {
-                // =====================================================
-                // FAST FOOD
-                // =====================================================
 
                 case "Burger":
                     return 250;
@@ -211,10 +176,6 @@ namespace GamingCafeAsset_InventorySystem
                 case "French Fries":
                     return 120;
 
-                // =====================================================
-                // SNACKS
-                // =====================================================
-
                 case "Chips":
                     return 50;
 
@@ -229,10 +190,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Cake":
                     return 200;
-
-                // =====================================================
-                // DRINKS
-                // =====================================================
 
                 case "Coke":
                     return 40;
@@ -252,11 +209,6 @@ namespace GamingCafeAsset_InventorySystem
 
             return 0;
         }
-
-        // =====================================================
-        // RESET FOOD SELECTIONS
-        // =====================================================
-
         private void ResetFoodSelections()
         {
             cbFastFood.SelectedIndex = 0;
@@ -264,18 +216,11 @@ namespace GamingCafeAsset_InventorySystem
             cbDrinks.SelectedIndex = 0;
         }
 
-        // =====================================================
-        // SELECT BOOKING
-        // =====================================================
-
         private void SelectBooking(int bookingID)
         {
             cbCustomer.SelectedValue = bookingID;
         }
 
-        // =====================================================
-        // DETECT FOOD
-        // =====================================================
 
         private void DetectAndSelectFood(string foodName)
         {
@@ -302,22 +247,14 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // FOOD SUMMARY
-        // =====================================================
-
         private void UpdateFoodSummary()
         {
             string foods = "";
-
-            // FAST FOOD
 
             if (!string.IsNullOrWhiteSpace(cbFastFood.Text))
             {
                 foods += cbFastFood.Text;
             }
-
-            // SNACKS
 
             if (!string.IsNullOrWhiteSpace(cbSnacks.Text))
             {
@@ -328,8 +265,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 foods += cbSnacks.Text;
             }
-
-            // DRINKS
 
             if (!string.IsNullOrWhiteSpace(cbDrinks.Text))
             {
@@ -343,10 +278,6 @@ namespace GamingCafeAsset_InventorySystem
 
             txtFoodName.Text = foods;
         }
-
-        // =====================================================
-        // UPDATE FOOD PRICE
-        // =====================================================
 
         private void UpdateFoodPrice()
         {
@@ -384,14 +315,9 @@ namespace GamingCafeAsset_InventorySystem
                 total.ToString("0.00");
         }
 
-        // =====================================================
-        // INSERT FOOD CATEGORIES
-        // =====================================================
-
         private void InsertFoodCategories(
             int selectedFoodID)
         {
-            // FAST FOOD
 
             if (!string.IsNullOrWhiteSpace(
                 cbFastFood.Text))
@@ -402,8 +328,6 @@ namespace GamingCafeAsset_InventorySystem
                 );
             }
 
-            // SNACKS
-
             if (!string.IsNullOrWhiteSpace(
                 cbSnacks.Text))
             {
@@ -412,8 +336,6 @@ namespace GamingCafeAsset_InventorySystem
                     "Snacks"
                 );
             }
-
-            // DRINKS
 
             if (!string.IsNullOrWhiteSpace(
                 cbDrinks.Text))
@@ -424,10 +346,6 @@ namespace GamingCafeAsset_InventorySystem
                 );
             }
         }
-
-        // =====================================================
-        // INSERT CATEGORY MAP
-        // =====================================================
 
         private void InsertCategoryMap(
             int selectedFoodID,
@@ -465,10 +383,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // COMBOBOX EVENTS
-        // =====================================================
-
         private void cbFastFood_SelectedIndexChanged(
             object sender,
             EventArgs e)
@@ -493,20 +407,12 @@ namespace GamingCafeAsset_InventorySystem
             UpdateFoodPrice();
         }
 
-        // =====================================================
-        // QUANTITY EVENT
-        // =====================================================
-
         private void txtQuantity_TextChanged(
             object sender,
             EventArgs e)
         {
             UpdateFoodPrice();
         }
-
-        // =====================================================
-        // CUSTOMER EVENT
-        // =====================================================
 
         private void cbCustomer_SelectedIndexChanged(
             object sender,
@@ -537,10 +443,6 @@ namespace GamingCafeAsset_InventorySystem
                 db.GetQueryData(query);
         }
 
-        // =====================================================
-        // RESET SCREEN
-        // =====================================================
-
         private void ResetScreen()
         {
             ResetFoodSelections();
@@ -557,10 +459,6 @@ namespace GamingCafeAsset_InventorySystem
 
             txtTotalPrice.Text = "0.00";
         }
-
-        // =====================================================
-        // SAVE / UPDATE
-        // =====================================================
 
         private void btnSave_Click(
     object sender,
@@ -605,10 +503,6 @@ namespace GamingCafeAsset_InventorySystem
             DBAccessHelper db =
                 new DBAccessHelper();
 
-            // =====================================================
-            // INSERT
-            // =====================================================
-
             if (!isUpdateMode)
             {
                 string insertFoodQuery =
@@ -633,10 +527,6 @@ namespace GamingCafeAsset_InventorySystem
                     return;
                 }
 
-                // =====================================================
-                // GET NEW FOOD ID
-                // =====================================================
-
                 string getFoodIdQuery =
                     "SELECT TOP 1 FoodID " +
                     "FROM FoodItem " +
@@ -650,10 +540,6 @@ namespace GamingCafeAsset_InventorySystem
                         foodIdResult.Data.Rows[0]["FoodID"]
                     );
 
-                // =====================================================
-                // INSERT CATEGORY MAPPINGS
-                // =====================================================
-
                 InsertFoodCategories(newFoodID);
 
                 MessageBox.Show(
@@ -664,10 +550,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 this.Close();
             }
-
-            // =====================================================
-            // UPDATE
-            // =====================================================
 
             else
             {
@@ -701,18 +583,10 @@ namespace GamingCafeAsset_InventorySystem
                     return;
                 }
 
-                // =====================================================
-                // DELETE OLD CATEGORY MAPS
-                // =====================================================
-
                 db.ExecuteNonQuery(
                     "DELETE FROM FoodItemCategory " +
                     "WHERE FoodID=" + foodID
                 );
-
-                // =====================================================
-                // INSERT NEW CATEGORY MAPS
-                // =====================================================
 
                 InsertFoodCategories(foodID);
 
@@ -726,20 +600,12 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // RESET BUTTON
-        // =====================================================
-
         private void btnReset_Click(
             object sender,
             EventArgs e)
         {
             ResetScreen();
         }
-
-        // =====================================================
-        // CANCEL BUTTON
-        // =====================================================
 
         private void btnCancel_Click(
             object sender,

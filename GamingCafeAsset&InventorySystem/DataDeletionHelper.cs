@@ -6,38 +6,10 @@ namespace GamingCafeAsset_InventorySystem
     {
         DBAccessHelper dbHelper = new DBAccessHelper();
 
-        // =====================================================
-        // USERS
-        // =====================================================
-
         public ResultSet DeleteUser(int userId)
         {
             string query =
               "DELETE FROM Users WHERE UserID = " + userId;
-
-            return dbHelper.ExecuteNonQuery(query);
-        }
-
-        // =====================================================
-        // FOOD ITEMS
-        // =====================================================
-
-        public ResultSet DeleteFoodItemsByBooking(int bookingId)
-        {
-            string query =
-              "DELETE FROM FoodItem WHERE BookingID = " + bookingId;
-
-            return dbHelper.ExecuteNonQuery(query);
-        }
-
-        // =====================================================
-        // BOOKINGS
-        // =====================================================
-
-        public ResultSet DeletePaymentsByBooking(int bookingId)
-        {
-            string query =
-              "DELETE FROM Payment WHERE BookingID = " + bookingId;
 
             return dbHelper.ExecuteNonQuery(query);
         }
@@ -49,10 +21,6 @@ namespace GamingCafeAsset_InventorySystem
 
             return dbHelper.ExecuteNonQuery(query);
         }
-
-        // =====================================================
-        // DEVICE
-        // =====================================================
 
         public ResultSet DeleteDevice(int deviceId)
         {
@@ -71,10 +39,6 @@ namespace GamingCafeAsset_InventorySystem
             return dbHelper.ExecuteNonQuery(query);
         }
 
-        // =====================================================
-        // DEVICE CATEGORY MAP
-        // =====================================================
-
         public ResultSet DeleteDeviceCategoryMap(int deviceId)
         {
             string query =
@@ -82,10 +46,6 @@ namespace GamingCafeAsset_InventorySystem
 
             return dbHelper.ExecuteNonQuery(query);
         }
-
-        // =====================================================
-        // DEVICE GAME MAP
-        // =====================================================
 
         public ResultSet DeleteDeviceGameMap(int deviceId)
         {
@@ -95,10 +55,6 @@ namespace GamingCafeAsset_InventorySystem
             return dbHelper.ExecuteNonQuery(query);
         }
 
-        // =====================================================
-        // GAME
-        // =====================================================
-
         public ResultSet DeleteGame(int gameId)
         {
             string query =
@@ -106,10 +62,6 @@ namespace GamingCafeAsset_InventorySystem
 
             return dbHelper.ExecuteNonQuery(query);
         }
-
-        // =====================================================
-        // SAFE CHECKS
-        // =====================================================
 
         public bool HasDeviceBooking(int deviceId)
         {

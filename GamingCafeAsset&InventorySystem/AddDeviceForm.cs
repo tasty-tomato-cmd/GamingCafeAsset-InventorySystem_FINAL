@@ -5,17 +5,9 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class AddDeviceForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
-
         private LoggedInUser currentUser;
         private bool isUpdateMode = false;
         private int deviceID;
-
-        // =====================================================
-        // CREATE MODE CONSTRUCTOR
-        // =====================================================
 
         public AddDeviceForm(LoggedInUser user)
         {
@@ -26,10 +18,6 @@ namespace GamingCafeAsset_InventorySystem
 
             LoadDevices();
         }
-
-        // =====================================================
-        // Datagrid view for live update
-        // =====================================================
 
         private void DisableSorting()
         {
@@ -64,10 +52,6 @@ namespace GamingCafeAsset_InventorySystem
             DisableSorting();
         }
 
-        // =====================================================
-        // UPDATE MODE CONSTRUCTOR
-        // =====================================================
-
         public AddDeviceForm(
           int deviceID,
           string name,
@@ -99,10 +83,6 @@ namespace GamingCafeAsset_InventorySystem
                 rbUnavailable.Checked = true;
         }
 
-        // =====================================================
-        // RESET BUTTON
-        // =====================================================
-
         private void ResetScreen()
         {
             txtName.Clear();
@@ -123,18 +103,10 @@ namespace GamingCafeAsset_InventorySystem
             LoadDevices();
         }
 
-        // =====================================================
-        // CANCEL BUTTON
-        // =====================================================
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        // =====================================================
-        // CREATE / UPDATE BUTTON
-        // =====================================================
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
@@ -142,10 +114,6 @@ namespace GamingCafeAsset_InventorySystem
             string category = cbCategory.Text;
             string location = txtLocationNumber.Text.Trim();
             string hourly = txtHourlyRate.Text.Trim();
-
-            // =================================================
-            // VALIDATION
-            // =================================================
 
             if (string.IsNullOrEmpty(name))
             {
@@ -177,10 +145,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =================================================
-            // STATUS
-            // =================================================
-
             string status = "";
 
             if (rbAvailable.Checked)
@@ -199,9 +163,6 @@ namespace GamingCafeAsset_InventorySystem
 
             if (!isUpdateMode)
             {
-                // =====================================================
-                // INSERT DEVICE
-                // =====================================================
 
                 string query =
                   "INSERT INTO Device " +
@@ -220,18 +181,10 @@ namespace GamingCafeAsset_InventorySystem
                     return;
                 }
 
-                // =====================================================
-                // GET NEW DEVICE ID
-                // =====================================================
-
                 string idQuery = "SELECT MAX(DeviceID) FROM Device";
                 ResultSet idResult = db.GetQueryData(idQuery);
 
                 int newDeviceId = Convert.ToInt32(idResult.Data.Rows[0][0]);
-
-                // =====================================================
-                // GET CATEGORY ID
-                // =====================================================
 
                 string catQuery =
                   "SELECT CategoryID FROM DeviceCategory " +
@@ -240,10 +193,6 @@ namespace GamingCafeAsset_InventorySystem
                 ResultSet catResult = db.GetQueryData(catQuery);
 
                 int categoryId = Convert.ToInt32(catResult.Data.Rows[0]["CategoryID"]);
-
-                // =====================================================
-                // INSERT INTO MAP TABLE
-                // =====================================================
 
                 string mapQuery =
                   "INSERT INTO DeviceCategoryMap (DeviceID, CategoryID) VALUES (" +
@@ -259,9 +208,6 @@ namespace GamingCafeAsset_InventorySystem
             }
             else
             {
-                // =====================================================
-                // UPDATE DEVICE TABLE
-                // =====================================================
 
                 string query =
                   "UPDATE Device SET " +
@@ -279,10 +225,6 @@ namespace GamingCafeAsset_InventorySystem
                     return;
                 }
 
-                // =====================================================
-                // UPDATE CATEGORY MAPPING
-                // =====================================================
-
                 string catQuery =
                   "SELECT CategoryID FROM DeviceCategory " +
                   "WHERE CategoryName = '" + category + "'";
@@ -291,13 +233,11 @@ namespace GamingCafeAsset_InventorySystem
 
                 int categoryId = Convert.ToInt32(catResult.Data.Rows[0]["CategoryID"]);
 
-                // remove old mapping
                 string deleteMap =
                   "DELETE FROM DeviceCategoryMap WHERE DeviceID = " + deviceID;
 
                 db.ExecuteNonQuery(deleteMap);
 
-                // insert new mapping
                 string insertMap =
                   "INSERT INTO DeviceCategoryMap (DeviceID, CategoryID) VALUES (" +
                   deviceID + ", " + categoryId + ")";

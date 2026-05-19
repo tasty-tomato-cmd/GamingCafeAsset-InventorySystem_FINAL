@@ -14,17 +14,11 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class HomeForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
 
         private LoggedInUser currentUser;
 
         private string currentModule = string.Empty;
 
-        // =====================================================
-        // CONSTRUCTOR
-        // =====================================================
 
         public HomeForm(LoggedInUser user)
         {
@@ -46,9 +40,6 @@ namespace GamingCafeAsset_InventorySystem
             LoadDashboard();
         }
 
-        // =====================================================
-        // PERMISSIONS
-        // =====================================================
 
         private void SetPermissions()
         {
@@ -82,9 +73,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // DATA GRID VIEW METHODS
-        // =====================================================
 
         private void DisableSorting()
         {
@@ -111,9 +99,6 @@ namespace GamingCafeAsset_InventorySystem
             DisableSorting();
         }
 
-        // =====================================================
-        // MODULE DATA LOADING
-        // =====================================================
 
         private void LoadCurrentModule()
         {
@@ -337,9 +322,6 @@ namespace GamingCafeAsset_InventorySystem
             );
         }
 
-        // =====================================================
-        // DASHBOARD
-        // =====================================================
 
         private void LoadDashboard()
         {
@@ -376,18 +358,12 @@ namespace GamingCafeAsset_InventorySystem
                 "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) " +
                 "AS [Hourly Rate], " +
 
-                // =====================================================
-                // COMBINE GAMES
-                // =====================================================
 
                 "ISNULL(GameList.Games, 'No Game Assigned') " +
                 "AS [Current Games] " +
 
                 "FROM Device " +
 
-                // =====================================================
-                // CURRENT BOOKING
-                // =====================================================
 
                 "OUTER APPLY ( " +
                 "SELECT TOP 1 * FROM Booking " +
@@ -400,9 +376,6 @@ namespace GamingCafeAsset_InventorySystem
                 "Booking.BookingID DESC " +
                 ") B " +
 
-                // =====================================================
-                // COMBINE ALL GAMES INTO ONE ROW
-                // =====================================================
 
                 "OUTER APPLY ( " +
                 "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
@@ -427,9 +400,6 @@ namespace GamingCafeAsset_InventorySystem
             );
         }
 
-        // =====================================================
-        // BUTTON COLOUR METHODS
-        // =====================================================
 
         private void ResetButtonColors()
         {
@@ -448,9 +418,6 @@ namespace GamingCafeAsset_InventorySystem
             btnGames.BackColor = Color.FromArgb(220, 60, 90);
         }
 
-        // =====================================================
-        // MODULE BUTTON EVENTS
-        // =====================================================
 
         private void ModuleButton_Click(object sender, EventArgs e)
         {
@@ -511,9 +478,6 @@ namespace GamingCafeAsset_InventorySystem
             LoadCurrentModule();
         }
 
-        // =====================================================
-        // SEARCH BOX EVENTS
-        // =====================================================
 
         private void txtSearch_Enter(object sender, EventArgs e)
         {
@@ -538,9 +502,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // SEARCH METHODS
-        // =====================================================
 
         private void SearchModuleData()
         {
@@ -583,9 +544,6 @@ namespace GamingCafeAsset_InventorySystem
 
                       "FROM Device " +
 
-                      // =====================================================
-                      // CURRENT BOOKING
-                      // =====================================================
 
                       "OUTER APPLY ( " +
                       "SELECT TOP 1 * FROM Booking " +
@@ -598,9 +556,6 @@ namespace GamingCafeAsset_InventorySystem
                       "Booking.BookingID DESC " +
                       ") B " +
 
-                      // =====================================================
-                      // COMBINE GAMES
-                      // =====================================================
 
                       "OUTER APPLY ( " +
                       "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
@@ -610,9 +565,6 @@ namespace GamingCafeAsset_InventorySystem
                       "WHERE DeviceGames.DeviceID = Device.DeviceID " +
                       ") GameList " +
 
-                      // =====================================================
-                      // SEARCH
-                      // =====================================================
 
                       "WHERE " +
 
@@ -628,9 +580,6 @@ namespace GamingCafeAsset_InventorySystem
 
                       "ISNULL(B.BookingStatus, '') LIKE '%" + searchText + "%' " +
 
-                      // =====================================================
-                      // ORDER
-                      // =====================================================
 
                       "ORDER BY " +
 
@@ -972,10 +921,6 @@ namespace GamingCafeAsset_InventorySystem
             SearchModuleData();
         }
 
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
         private void btnLogout_Click(object sender, EventArgs e)
         {
             try
@@ -1004,10 +949,6 @@ namespace GamingCafeAsset_InventorySystem
                 );
             }
         }
-
-        // =====================================================
-        // CRUD BUTTON EVENTS
-        // =====================================================
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -1082,17 +1023,11 @@ namespace GamingCafeAsset_InventorySystem
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            // =====================================================
-            // CHECK MODULE
-            // =====================================================
 
             switch (currentModule)
             {
                 case "Users":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
@@ -1105,15 +1040,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
-
                     DataGridViewRow row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // SAFE VALUE EXTRACTION
-                    // =====================================================
 
                     int userID = Convert.ToInt32(row.Cells["Reference No."].Value);
 
@@ -1133,10 +1060,6 @@ namespace GamingCafeAsset_InventorySystem
                     {
                         dob = DateTime.Now;
                     }
-
-                    // =====================================================
-                    // OPEN UPDATE FORM
-                    // =====================================================
 
                     UpdateUserForm updateUserForm = new UpdateUserForm(
                       userID,
@@ -1225,9 +1148,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Devices":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
@@ -1240,15 +1160,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
-
                     row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // SAFE VALUE EXTRACTION (MATCH GRID COLUMNS)
-                    // =====================================================
 
                     int deviceID = Convert.ToInt32(row.Cells["Device No."].Value);
 
@@ -1259,10 +1171,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     double hourlyRate = 0;
                     double.TryParse(row.Cells["Hourly Rate"].Value?.ToString(), out hourlyRate);
-
-                    // =====================================================
-                    // OPEN UPDATE FORM
-                    // =====================================================
 
                     AddDeviceForm updateDeviceForm = new AddDeviceForm(
                       deviceID,
@@ -1279,10 +1187,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Games":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
-
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
@@ -1294,15 +1198,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
-
                     row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // SAFE VALUE EXTRACTION
-                    // =====================================================
 
                     int gameID = Convert.ToInt32(row.Cells["Game No."].Value);
 
@@ -1310,10 +1206,6 @@ namespace GamingCafeAsset_InventorySystem
                     string platform = row.Cells["Platform"].Value?.ToString() ?? "";
                     string genre = row.Cells["Genre"].Value?.ToString() ?? "";
                     string deviceName = row.Cells["Device"].Value?.ToString() ?? "";
-
-                    // =====================================================
-                    // GET DEVICE ID FROM DEVICE NAME
-                    // =====================================================
 
                     deviceID = 0;
 
@@ -1338,10 +1230,6 @@ namespace GamingCafeAsset_InventorySystem
                             );
                         }
                     }
-
-                    // =====================================================
-                    // OPEN UPDATE FORM
-                    // =====================================================
 
                     AddGamesForm updateGameForm = new AddGamesForm(
                       gameID,
@@ -1434,10 +1322,6 @@ namespace GamingCafeAsset_InventorySystem
                 
                 case "Payments":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
-
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
@@ -1450,15 +1334,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
-
                     row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // SAFE VALUE EXTRACTION
-                    // =====================================================
 
                     if (!int.TryParse(
                         row.Cells["Payment No."].Value?.ToString(),
@@ -1513,10 +1389,6 @@ namespace GamingCafeAsset_InventorySystem
                             row.Cells["Payment Date"].Value?.ToString(),
                             out DateTime pd) ? pd : DateTime.Now;
 
-                    // =====================================================
-                    // OPEN UPDATE FORM
-                    // =====================================================
-
                     AddPaymentForm updatePaymentForm =
                         new AddPaymentForm(
                             currentUser,
@@ -1549,26 +1421,15 @@ namespace GamingCafeAsset_InventorySystem
                     break;
             }
 
-            // =====================================================
-            // RELOAD GRID
-            // =====================================================
-
             LoadCurrentModule();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // =====================================================
-            // CHECK MODULE
-            // =====================================================
 
             switch (currentModule)
             {
                 case "Users":
-
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
@@ -1582,15 +1443,8 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
 
                     DataGridViewRow row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // GET USER ID
-                    // =====================================================
 
                     if (!int.TryParse(
                         row.Cells["Reference No."].Value?.ToString(),
@@ -1600,19 +1454,12 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET USER INFO
-                    // =====================================================
 
                     string userType =
                         row.Cells["Role"].Value?.ToString() ?? "";
 
                     string username =
                         row.Cells["Username"].Value?.ToString() ?? "";
-
-                    // =====================================================
-                    // BLOCK ADMIN DELETE
-                    // =====================================================
 
                     if (userType.Equals(
                         "Admin",
@@ -1628,10 +1475,6 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // CONFIRM DELETE
-                    // =====================================================
-
                     DialogResult confirmResult =
                       MessageBox.Show(
                         "Delete user: " + username + "?",
@@ -1645,19 +1488,11 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // DELETE USER
-                    // =====================================================
-
                     DataDeletionHelper deletionHelper =
                         new DataDeletionHelper();
 
                     ResultSet result =
                         deletionHelper.DeleteUser(userId);
-
-                    // =====================================================
-                    // CHECK RESULT
-                    // =====================================================
 
                     if (result.HasError)
                     {
@@ -1715,10 +1550,6 @@ namespace GamingCafeAsset_InventorySystem
                     DBAccessHelper db = new DBAccessHelper();
                     DataDeletionHelper helper = new DataDeletionHelper();
 
-                    // =====================================================
-                    // 1. CHECK DEVICE STATUS (BLOCK ACTIVE DEVICE)
-                    // =====================================================
-
                     string statusQuery =
                       "SELECT Status FROM Device WHERE DeviceID = " + deviceId;
 
@@ -1746,10 +1577,6 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // 2. BOOKING HISTORY
-                    // =====================================================
-
                     bool hasBooking = helper.HasDeviceBooking(deviceId);
 
                     if (hasBooking)
@@ -1766,10 +1593,6 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // 3. CONFIRM DELETE
-                    // =====================================================
-
                     DialogResult confirm = MessageBox.Show(
                       "Are you sure you want to delete device: " + deviceName + "?",
                       "Confirm Delete",
@@ -1780,17 +1603,9 @@ namespace GamingCafeAsset_InventorySystem
                     if (confirm == DialogResult.No)
                         return;
 
-                    // =====================================================
-                    // 4. DELETE DEPENDENCIES
-                    // =====================================================
-
                     helper.DeleteDeviceCategoryMap(deviceId);
                     helper.DeleteDeviceGameMap(deviceId);
                     helper.DeleteBookingsByDevice(deviceId);
-
-                    // =====================================================
-                    // 5. DELETE DEVICE
-                    // =====================================================
 
                     result = helper.DeleteDevice(deviceId);
 
@@ -1807,10 +1622,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Food Items":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
-
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
@@ -1823,15 +1634,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
-
                     row = dgvInfo.SelectedRows[0];
-
-                    // =====================================================
-                    // GET FOOD ID
-                    // =====================================================
 
                     if (!int.TryParse(
                         row.Cells["Food No."].Value?.ToString(),
@@ -1843,10 +1646,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     string foodName =
                         row.Cells["Food Name"].Value?.ToString() ?? "";
-
-                    // =====================================================
-                    // CONFIRM DELETE
-                    // =====================================================
 
                     confirm =
                         MessageBox.Show(
@@ -1862,15 +1661,7 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // DATABASE
-                    // =====================================================
-
                     db = new DBAccessHelper();
-
-                    // =====================================================
-                    // DELETE CATEGORY MAPPINGS FIRST
-                    // =====================================================
 
                     result =
                         db.ExecuteNonQuery(
@@ -1890,19 +1681,11 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // DELETE FOOD ITEM
-                    // =====================================================
-
                     result =
                         db.ExecuteNonQuery(
                             "DELETE FROM FoodItem " +
                             "WHERE FoodID = " + foodID
                         );
-
-                    // =====================================================
-                    // RESULT
-                    // =====================================================
 
                     if (result.HasError)
                     {
@@ -1974,10 +1757,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     deletionHelper = new DataDeletionHelper();
 
-                    // =====================================================
-                    // 1. DELETE DEVICE-GAME MAPPINGS FIRST (SAFE FK ORDER)
-                    // =====================================================
-
                     result = deletionHelper.DeleteDeviceGameMap(gameId);
 
                     if (result.HasError)
@@ -1985,10 +1764,6 @@ namespace GamingCafeAsset_InventorySystem
                         MessageBox.Show(result.Message, "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
-                    // =====================================================
-                    // 2. DELETE GAME
-                    // =====================================================
 
                     result = deletionHelper.DeleteGame(gameId);
 
@@ -2024,10 +1799,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     return;
             }
-
-            // =====================================================
-            // RELOAD GRID
-            // =====================================================
 
             LoadCurrentModule();
         }

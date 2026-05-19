@@ -6,20 +6,12 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class AddBookingForm : Form
     {
-        // =====================================================
-        // FIELDS
-        // =====================================================
-
         private LoggedInUser currentUser;
         private bool isUpdateMode = false;
         private int bookingId;
         private int deviceID;
 
         private bool isLoading = false;
-
-        // =====================================================
-        // CREATE MODE
-        // =====================================================
 
         public AddBookingForm(LoggedInUser user)
         {
@@ -36,10 +28,6 @@ namespace GamingCafeAsset_InventorySystem
 
             isLoading = false;
         }
-
-        // =====================================================
-        // UPDATE MODE
-        // =====================================================
 
         public AddBookingForm(
           int bookingId,
@@ -78,16 +66,12 @@ namespace GamingCafeAsset_InventorySystem
             else if (status == "Cancelled") rbCancel.Checked = true;
             else if (status == "Completed") rbCompleted.Checked = true;
 
-            LoadDevices(); // IMPORTANT: must happen AFTER deviceID is set
+            LoadDevices();
 
             isLoading = false;
 
             UpdateTotalHours();
         }
-
-        // =====================================================
-        // LOAD DEVICES (FIXED)
-        // =====================================================
 
         private void LoadDevices()
         {
@@ -110,12 +94,11 @@ namespace GamingCafeAsset_InventorySystem
 
             if (!result.HasError && result.Data != null)
             {
-                cbDevice.DataSource = null; // IMPORTANT RESET
+                cbDevice.DataSource = null;
                 cbDevice.DisplayMember = "DeviceName";
                 cbDevice.ValueMember = "DeviceID";
                 cbDevice.DataSource = result.Data;
 
-                // FIX: delay selection until binding completes
                 cbDevice.SelectedIndex = -1;
 
                 if (isUpdateMode)
@@ -124,10 +107,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
         }
-
-        // =====================================================
-        // EVENTS
-        // =====================================================
 
         private void dtpStartTime_ValueChanged(object sender, EventArgs e)
         {
@@ -140,10 +119,6 @@ namespace GamingCafeAsset_InventorySystem
             if (isLoading) return;
             UpdateTotalHours();
         }
-
-        // =====================================================
-        // TOTAL HOURS
-        // =====================================================
 
         private void UpdateTotalHours()
         {
@@ -158,10 +133,6 @@ namespace GamingCafeAsset_InventorySystem
 
             txtTotalHours.Text = (endTime - startTime).TotalHours.ToString("F2");
         }
-
-        // =====================================================
-        // RESET
-        // =====================================================
 
         private void ResetScreen()
         {
@@ -181,10 +152,6 @@ namespace GamingCafeAsset_InventorySystem
             cbDevice.SelectedIndex = -1;
         }
 
-        // =====================================================
-        // BUTTONS
-        // =====================================================
-
         private void btnReset_Click(object sender, EventArgs e)
         {
             ResetScreen();
@@ -195,10 +162,6 @@ namespace GamingCafeAsset_InventorySystem
         {
             this.Close();
         }
-
-        // =====================================================
-        // CREATE / UPDATE
-        // =====================================================
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
@@ -250,10 +213,6 @@ namespace GamingCafeAsset_InventorySystem
 
             DBAccessHelper db = new DBAccessHelper();
 
-            // =====================================================
-            // INSERT
-            // =====================================================
-
             if (!isUpdateMode)
             {
                 string check =
@@ -300,9 +259,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
 
-            // =====================================================
-            // UPDATE
-            // =====================================================
             else
             {
                 string query =

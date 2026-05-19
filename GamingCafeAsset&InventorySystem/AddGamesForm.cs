@@ -9,9 +9,6 @@ namespace GamingCafeAsset_InventorySystem
         private bool isUpdateMode = false;
         private int gameID;
 
-        // =====================================================
-        // CREATE MODE
-        // =====================================================
         public AddGamesForm(LoggedInUser user)
         {
             InitializeComponent();
@@ -22,9 +19,6 @@ namespace GamingCafeAsset_InventorySystem
             LoadGames();
         }
 
-        // =====================================================
-        // UPDATE MODE
-        // =====================================================
         public AddGamesForm(
           int gameID,
           int deviceID,
@@ -48,15 +42,11 @@ namespace GamingCafeAsset_InventorySystem
 
             btnGamesCreate.Text = "Update Game";
 
-            // IMPORTANT: set after combo is loaded
             SetDeviceByID(deviceID);
 
             LoadGames();
         }
 
-        // =====================================================
-        // LOAD GAMES
-        // =====================================================
         private void LoadGames()
         {
             DBAccessHelper db = new DBAccessHelper();
@@ -87,9 +77,6 @@ namespace GamingCafeAsset_InventorySystem
                 col.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
 
-        // =====================================================
-        // DEVICE COMBO LOAD
-        // =====================================================
         private void LoadDevicesIntoComboBox()
         {
             DBAccessHelper db = new DBAccessHelper();
@@ -112,9 +99,6 @@ namespace GamingCafeAsset_InventorySystem
             cbDevice.SelectedIndex = 0;
         }
 
-        // =====================================================
-        // SET DEVICE (UPDATE MODE SAFE)
-        // =====================================================
         private void SetDeviceByID(int deviceID)
         {
             if (deviceID <= 0)
@@ -143,9 +127,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // CREATE / UPDATE
-        // =====================================================
         private void btnGamesCreate_Click(object sender, EventArgs e)
         {
             string gameName = txtGameName.Text.Trim();
@@ -176,9 +157,6 @@ namespace GamingCafeAsset_InventorySystem
 
             DBAccessHelper db = new DBAccessHelper();
 
-            // =====================================================
-            // DEVICE (OPTIONAL SAFE)
-            // =====================================================
             int? deviceID = null;
 
             if (cbDevice.SelectedItem != null &&
@@ -205,9 +183,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
 
-            // =====================================================
-            // INSERT MODE
-            // =====================================================
             if (!isUpdateMode)
             {
                 string query =
@@ -242,9 +217,6 @@ namespace GamingCafeAsset_InventorySystem
                 LoadGames();
             }
 
-            // =====================================================
-            // UPDATE MODE
-            // =====================================================
             else
             {
                 string query =

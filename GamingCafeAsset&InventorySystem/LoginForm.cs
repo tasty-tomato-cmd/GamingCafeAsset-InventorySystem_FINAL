@@ -13,10 +13,6 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class LoginForm : Form
     {
-        // =====================================================
-        // CONSTRUCTOR
-        // =====================================================
-
         public LoginForm()
         {
             InitializeComponent();
@@ -24,9 +20,6 @@ namespace GamingCafeAsset_InventorySystem
             txtUser.Focus();
         }
 
-        // =====================================================
-        // LOGIN BUTTON HOVER EFFECTS
-        // =====================================================
 
         private void btnLogin_MouseEnter(object sender, EventArgs e)
         {
@@ -40,9 +33,6 @@ namespace GamingCafeAsset_InventorySystem
               Color.FromArgb(220, 60, 90);
         }
 
-        // =====================================================
-        // PASSWORD VISIBILITY
-        // =====================================================
 
         private void btnHidepass_Click(object sender, EventArgs e)
         {
@@ -64,9 +54,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-        // =====================================================
-        // LOGIN SYSTEM
-        // =====================================================
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -76,9 +63,6 @@ namespace GamingCafeAsset_InventorySystem
             string passWord =
               txtPass.Text;
 
-            // =================================================
-            // INPUT VALIDATION
-            // =================================================
 
             if (string.IsNullOrWhiteSpace(userName) &&
               string.IsNullOrWhiteSpace(passWord))
@@ -117,9 +101,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-            // =================================================
-            // LOGIN AUTHENTICATION
-            // =================================================
 
             try
             {
@@ -136,9 +117,6 @@ namespace GamingCafeAsset_InventorySystem
                 ResultSet res =
                   db.GetQueryData(query);
 
-                // =============================================
-                // DATABASE ERROR
-                // =============================================
 
                 if (res.HasError)
                 {
@@ -152,9 +130,6 @@ namespace GamingCafeAsset_InventorySystem
                     return;
                 }
 
-                // =============================================
-                // SUCCESSFUL LOGIN
-                // =============================================
 
                 if (res.Data != null &&
                   res.Data.Rows.Count > 0)
@@ -201,9 +176,6 @@ namespace GamingCafeAsset_InventorySystem
                       res.Data.Rows[0]["LastName"]
                       .ToString();
 
-                    // =========================================
-                    // USER ROLE ASSIGNMENT
-                    // =========================================
 
                     if (user.UserTypeID == 1)
                     {
@@ -221,9 +193,6 @@ namespace GamingCafeAsset_InventorySystem
                           "Staff";
                     }
 
-                    // =========================================
-                    // OPEN HOME FORM
-                    // =========================================
 
                     MessageBox.Show(
                       "Login successful!",
@@ -242,9 +211,6 @@ namespace GamingCafeAsset_InventorySystem
                     this.Show();
                 }
 
-                // =============================================
-                // INVALID LOGIN
-                // =============================================
                 else
                 {
                     MessageBox.Show(
@@ -262,9 +228,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
 
-            // =================================================
-            // EXCEPTION HANDLING
-            // =================================================
             catch (Exception exp)
             {
                 MessageBox.Show(

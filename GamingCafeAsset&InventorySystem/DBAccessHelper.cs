@@ -9,10 +9,6 @@ using System.Windows.Forms;
 
 namespace GamingCafeAsset_InventorySystem
 {
-    // =====================================================
-    // RESULT SET CLASS
-    // =====================================================
-
     public class ResultSet
     {
         public bool HasError
@@ -34,15 +30,8 @@ namespace GamingCafeAsset_InventorySystem
         }
     }
 
-    // =====================================================
-    // DATABASE ACCESS HELPER CLASS
-    // =====================================================
-
     public class DBAccessHelper
     {
-        // =================================================
-        // DATABASE CONNECTION
-        // =================================================
 
         public static SqlConnection con =
           new SqlConnection(
@@ -52,17 +41,9 @@ namespace GamingCafeAsset_InventorySystem
             "TrustServerCertificate=True"
           );
 
-        // =================================================
-        // SELECT QUERY METHOD
-        // =================================================
-
         public ResultSet GetQueryData(string query)
         {
             var resultSet = new ResultSet();
-
-            // =============================================
-            // EMPTY QUERY CHECK
-            // =============================================
 
             if (string.IsNullOrWhiteSpace(query))
             {
@@ -73,10 +54,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 return resultSet;
             }
-
-            // =============================================
-            // EXECUTE SELECT QUERY
-            // =============================================
 
             try
             {
@@ -92,10 +69,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 resultSet.Data = dataTable;
             }
-
-            // =============================================
-            // ERROR HANDLING
-            // =============================================
             catch (Exception exp)
             {
                 resultSet.HasError = true;
@@ -104,10 +77,6 @@ namespace GamingCafeAsset_InventorySystem
                   "Error executing query: " +
                   exp.Message;
             }
-
-            // =============================================
-            // CLOSE CONNECTION
-            // =============================================
             finally
             {
                 if (con.State == ConnectionState.Open)
@@ -118,18 +87,10 @@ namespace GamingCafeAsset_InventorySystem
 
             return resultSet;
         }
-
-        // =================================================
-        // INSERT / UPDATE / DELETE METHOD
-        // =================================================
-
+        
         public ResultSet ExecuteNonQuery(string query)
         {
             var resultSet = new ResultSet();
-
-            // =============================================
-            // EMPTY QUERY CHECK
-            // =============================================
 
             if (string.IsNullOrWhiteSpace(query))
             {
@@ -141,10 +102,6 @@ namespace GamingCafeAsset_InventorySystem
                 return resultSet;
             }
 
-            // =============================================
-            // EXECUTE QUERY
-            // =============================================
-
             try
             {
                 con.Open();
@@ -154,10 +111,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 cmd.ExecuteNonQuery();
             }
-
-            // =============================================
-            // ERROR HANDLING
-            // =============================================
             catch (Exception exp)
             {
                 resultSet.HasError = true;
@@ -166,10 +119,6 @@ namespace GamingCafeAsset_InventorySystem
                   "Error executing query: " +
                   exp.Message;
             }
-
-            // =============================================
-            // CLOSE CONNECTION
-            // =============================================
             finally
             {
                 if (con.State == ConnectionState.Open)
