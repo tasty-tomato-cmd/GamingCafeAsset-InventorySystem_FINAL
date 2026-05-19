@@ -1528,17 +1528,45 @@ namespace GamingCafeAsset_InventorySystem
                     // GET USER ID
                     // =====================================================
 
-                    if (!int.TryParse(row.Cells["Reference No."].Value?.ToString(), out int userId))
+                    if (!int.TryParse(
+                        row.Cells["Reference No."].Value?.ToString(),
+                        out int userId))
                     {
                         MessageBox.Show("Invalid user selected.");
                         return;
                     }
 
                     // =====================================================
-                    // CONFIRM DELETE
+                    // GET USER INFO
                     // =====================================================
 
-                    string username = row.Cells["Username"].Value?.ToString() ?? "";
+                    string userType =
+                        row.Cells["Role"].Value?.ToString() ?? "";
+
+                    string username =
+                        row.Cells["Username"].Value?.ToString() ?? "";
+
+                    // =====================================================
+                    // BLOCK ADMIN DELETE
+                    // =====================================================
+
+                    if (userType.Equals(
+                        "Admin",
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show(
+                            "Admin accounts cannot be deleted.",
+                            "Delete Blocked",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
+                    }
+
+                    // =====================================================
+                    // CONFIRM DELETE
+                    // =====================================================
 
                     DialogResult confirmResult =
                       MessageBox.Show(
@@ -1557,9 +1585,11 @@ namespace GamingCafeAsset_InventorySystem
                     // DELETE USER
                     // =====================================================
 
-                    DataDeletionHelper deletionHelper = new DataDeletionHelper();
+                    DataDeletionHelper deletionHelper =
+                        new DataDeletionHelper();
 
-                    ResultSet result = deletionHelper.DeleteUser(userId);
+                    ResultSet result =
+                        deletionHelper.DeleteUser(userId);
 
                     // =====================================================
                     // CHECK RESULT
@@ -1574,6 +1604,7 @@ namespace GamingCafeAsset_InventorySystem
                           MessageBoxIcon.Error
                         );
                     }
+
                     else
                     {
                         MessageBox.Show(
@@ -1585,6 +1616,7 @@ namespace GamingCafeAsset_InventorySystem
                     }
 
                     break;
+
 
                 case "Bookings":
 
