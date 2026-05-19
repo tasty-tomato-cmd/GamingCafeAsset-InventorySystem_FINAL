@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace GamingCafeAsset_InventorySystem
@@ -11,384 +10,683 @@ namespace GamingCafeAsset_InventorySystem
         // FIELDS
         // =====================================================
 
-        private bool isUpdateMode = false;
-
-        private int paymentID = 0;
-        private int bookingID = 0;
-        private int oldDeviceID = 0;
-
         private LoggedInUser currentUser;
 
-        // =====================================================
-        // CONSTRUCTOR (CREATE)
-        // =====================================================
+        private bool isUpdateMode = false;
 
-        public AddPaymentForm(LoggedInUser user)
-        {
-            InitializeComponent();
-            currentUser = user;
-        }
+        private int paymentID;
 
         // =====================================================
-        // CONSTRUCTOR (UPDATE)
+        // CREATE MODE
         // =====================================================
 
         public AddPaymentForm(
-          LoggedInUser user,
-          int paymentID,
-          int bookingID,
-          int deviceID,
-          string deviceName,
-          string customerName,
-          decimal hours,
-          decimal totalAmount,
-          string notes,
-          string paymentMethod,
-          string paymentStatus
-        )
+            LoggedInUser user)
         {
             InitializeComponent();
 
             currentUser = user;
 
-            this.paymentID = paymentID;
-            this.bookingID = bookingID;
-            this.oldDeviceID = deviceID;
+            LoadActiveBookings();
+            LoadPaymentMethods();
+
+            PaymentEvents();
+
+            ResetScreen();
+        }
+
+        // =====================================================
+        // UPDATE MODE
+        // =====================================================
+
+        public AddPaymentForm(
+            LoggedInUser user,
+            int paymentID,
+            int bookingID,
+            string customerName,
+            string deviceName,
+            double totalHours,
+            double deviceCharge,
+            double foodCharge,
+            double totalAmount,
+            string paymentMethod,
+            string paymentStatus,
+            DateTime paymentDate)
+        {
+            InitializeComponent();
+
+            currentUser = user;
 
             isUpdateMode = true;
 
-            LoadDevicesForUpdate(deviceName);
+            this.paymentID = paymentID;
 
-            txtCustomer.Text = customerName;
-            txtHours.Text = hours.ToString();
-            txtNote.Text = notes;
-            txtTotal.Text = totalAmount.ToString("0.00");
-            cbPaymentMethods.Text = paymentMethod;
+            LoadActiveBookings();
+            LoadPaymentMethods();
 
-            rbtnPaid.Checked = paymentStatus == "Paid";
-            rbtnRefund.Checked = paymentStatus == "Refunded";
-            rbtnPending.Checked = paymentStatus == "Pending";
+            PaymentEvents();
 
-            btnCreate.Text = "Update Payment";
+            btnCreate.Text = "UPDATE PAYMENT";
 
-            CalculateCharges();
-        }
+            // =====================================================
+            // SET VALUES
+            // =====================================================
 
-        // =====================================================
-        // GET ACTIVE BOOKING ID FOR DEVICE (USED IN UPDATE MODE)
-        // =====================================================
+            cbBookingRef.SelectedValue = bookingID;
 
-        private int GetActiveBookingId(int deviceID)
-        {
-            DBAccessHelper db = new DBAccessHelper();
+            txtBookingRef.Text =
+                bookingID.ToString();
 
-            string query =
-              "SELECT TOP 1 BookingID FROM Booking " +
-              "WHERE DeviceID=" + deviceID + " " +
-              "AND BookingStatus='Active' " +
-              "ORDER BY BookingID DESC";
+            txtCustomer.Text =
+                customerName;
 
-            ResultSet result = db.GetQueryData(query);
+            txtDeviceName.Text =
+                deviceName;
 
-            if (result.Data.Rows.Count > 0)
-                return Convert.ToInt32(result.Data.Rows[0]["BookingID"]);
+            txtHours.Text =
+                totalHours.ToString("0.00");
 
-            return 0;
-        }
+            txtCharge.Text =
+                deviceCharge.ToString("0.00");
 
-        // =====================================================
-        // LOAD DEVICES
-        // =====================================================
+            txtFood.Text =
+                foodCharge.ToString("0.00");
 
-        private void LoadDevices()
-        {
-            DBAccessHelper db = new DBAccessHelper();
+            txtTotal.Text =
+                totalAmount.ToString("0.00");
 
-            string query =
-              "SELECT DeviceID, DeviceName FROM Device WHERE Status='Available' ORDER BY DeviceName";
+            cbPaymentMethods.Text =
+                paymentMethod;
 
-            ResultSet result = db.GetQueryData(query);
+            dtpDop.Value =
+                paymentDate;
 
-            cbDevice.DataSource = result.Data;
-            cbDevice.DisplayMember = "DeviceName";
-            cbDevice.ValueMember = "DeviceID";
-            cbDevice.SelectedIndex = -1;
-        }
+            // =====================================================
+            // STATUS
+            // =====================================================
 
-        private void LoadDevicesForUpdate(string currentDevice)
-        {
-            DBAccessHelper db = new DBAccessHelper();
-
-            string safeDevice = currentDevice.Replace("'", "''");
-
-            string query =
-              "SELECT DeviceID, DeviceName FROM Device " +
-              "WHERE Status='Available' OR DeviceName='" + safeDevice + "' " +
-              "ORDER BY DeviceName";
-
-            ResultSet result = db.GetQueryData(query);
-
-            cbDevice.DataSource = result.Data;
-            cbDevice.DisplayMember = "DeviceName";
-            cbDevice.ValueMember = "DeviceID";
-
-            cbDevice.SelectedIndex =
-              cbDevice.FindStringExact(currentDevice);
-        }
-
-        // =====================================================
-        // CHARGE CALCULATION
-        // =====================================================
-
-        private void CalculateCharges()
-        {
-            try
+            if (paymentStatus == "Paid")
             {
-                if (cbDevice.SelectedValue == null) return;
-
-                if (!decimal.TryParse(txtHours.Text, out decimal hours))
-                {
-                    txtCharge.Text = "";
-                    txtFood.Text = "";
-                    txtTotal.Text = "";
-                    return;
-                }
-
-                int deviceID = Convert.ToInt32(cbDevice.SelectedValue);
-
-                DBAccessHelper db = new DBAccessHelper();
-
-                // =====================================================
-                // DEVICE CHARGE
-                // =====================================================
-
-                string deviceQuery =
-                  "SELECT HourlyRate FROM Device WHERE DeviceID=" + deviceID;
-
-                ResultSet deviceResult = db.GetQueryData(deviceQuery);
-
-                decimal deviceTotal = 0;
-
-                // refund rule
-                bool isRefunded =
-                  (rbtnRefund.Checked || txtNote.Text.Contains("Refunded"));
-
-                if (!isRefunded)
-                {
-                    if (deviceResult.Data.Rows.Count > 0)
-                    {
-                        decimal rate =
-                          Convert.ToDecimal(deviceResult.Data.Rows[0]["HourlyRate"]);
-
-                        deviceTotal = rate * hours;
-                    }
-                }
-
-                txtCharge.Text = deviceTotal.ToString("0.00");
-
-                // =====================================================
-                // FOOD CHARGE (AUTO DETECT BOOKING)
-                // =====================================================
-                decimal foodTotal = 0;
-
-                // always try to detect booking from device
-                int activeBookingId = bookingID;
-
-                if (activeBookingId == 0 && cbDevice.SelectedValue != null)
-                {
-                    deviceID = Convert.ToInt32(cbDevice.SelectedValue);
-                    activeBookingId = GetActiveBookingId(deviceID);
-                }
-
-                if (activeBookingId > 0)
-                {
-                    string foodQuery =
-                      "SELECT ISNULL(SUM(Price * Quantity),0) AS FoodTotal " +
-                      "FROM FoodItem WHERE BookingID=" + activeBookingId;
-
-                    ResultSet foodResult = db.GetQueryData(foodQuery);
-
-                    if (foodResult.Data.Rows.Count > 0)
-                    {
-                        foodTotal = Convert.ToDecimal(foodResult.Data.Rows[0]["FoodTotal"]);
-                    }
-
-                    bookingID = activeBookingId;
-                }
-
-                txtFood.Text = foodTotal.ToString("0.00");
-
-                // =====================================================
-                // FINAL TOTAL
-                // =====================================================
-                decimal grandTotal = deviceTotal + foodTotal;
-
-                txtTotal.Text = grandTotal.ToString("0.00");
+                rbtnPaid.Checked = true;
             }
-            catch
+
+            else if (paymentStatus == "Pending")
             {
-                txtCharge.Text = "";
-                txtFood.Text = "";
-                txtTotal.Text = "";
+                rbtnPending.Checked = true;
             }
-        }
 
-        private string GetDeviceStatus(string paymentStatus)
-        {
-            switch (paymentStatus)
+            else if (paymentStatus == "Refunded")
             {
-                case "Paid":
-                    return "Available";
-
-                case "Refunded":
-                    return "Available";
-
-                case "Pending":
-                    return "Occupied";
-
-                default:
-                    return "Available";
+                rbtnRefund.Checked = true;
             }
         }
 
         // =====================================================
-        // SAVE
+        // EVENTS
         // =====================================================
 
-        private void btnCreate_Click(object sender, EventArgs e)
+        private void PaymentEvents()
         {
-            if (cbDevice.SelectedValue == null ||
-              string.IsNullOrWhiteSpace(txtCustomer.Text) ||
-              !decimal.TryParse(txtHours.Text, out decimal hours))
+            cbBookingRef.SelectedIndexChanged +=
+                cbBookingRef_SelectedIndexChanged;
+        }
+
+        // =====================================================
+        // LOAD ACTIVE BOOKINGS
+        // =====================================================
+
+        private void LoadActiveBookings()
+        {
+            DBAccessHelper db =
+                new DBAccessHelper();
+
+            string query =
+                "SELECT " +
+
+                "Booking.BookingID, " +
+
+                "CAST(Booking.BookingID AS VARCHAR) + " +
+                "' - ' + " +
+                "Booking.CustomerName + " +
+                "' - ' + " +
+                "Device.DeviceName " +
+
+                "AS BookingInfo " +
+
+                "FROM Booking " +
+
+                "INNER JOIN Device " +
+                "ON Booking.DeviceID = Device.DeviceID";
+
+            ResultSet result =
+                db.GetQueryData(query);
+
+            if (!result.HasError &&
+                result.Data != null)
             {
-                MessageBox.Show("Fill all required fields.");
+                cbBookingRef.DataSource =
+                    result.Data;
+
+                cbBookingRef.DisplayMember =
+                    "BookingInfo";
+
+                cbBookingRef.ValueMember =
+                    "BookingID";
+
+                cbBookingRef.SelectedIndex = -1;
+            }
+        }
+
+        // =====================================================
+        // LOAD PAYMENT METHODS
+        // =====================================================
+
+        private void LoadPaymentMethods()
+        {
+            cbPaymentMethods.Items.Clear();
+
+            cbPaymentMethods.Items.Add("Cash");
+            cbPaymentMethods.Items.Add("Card");
+            cbPaymentMethods.Items.Add("Bkash");
+            cbPaymentMethods.Items.Add("Nagad");
+            cbPaymentMethods.Items.Add("Rocket");
+
+            cbPaymentMethods.SelectedIndex = -1;
+        }
+
+        // =====================================================
+        // BOOKING CHANGE EVENT
+        // =====================================================
+
+        private void cbBookingRef_SelectedIndexChanged(
+            object sender,
+            EventArgs e)
+        {
+            if (cbBookingRef.SelectedValue == null)
+            {
                 return;
             }
 
-            int deviceID = Convert.ToInt32(cbDevice.SelectedValue);
-            decimal totalAmount = Convert.ToDecimal(txtTotal.Text);
-
-            string customer = txtCustomer.Text.Replace("'", "''");
-            string notes = txtNote.Text.Replace("'", "''");
-            string method = cbPaymentMethods.Text.Replace("'", "''");
-
-            string status =
-              rbtnPaid.Checked ? "Paid" :
-              rbtnRefund.Checked ? "Refunded" : "Pending";
-
-            DBAccessHelper db = new DBAccessHelper();
-
-            // =====================================================
-            // UPDATE
-            // =====================================================
-
-            if (isUpdateMode)
+            if (!int.TryParse(
+                cbBookingRef.SelectedValue.ToString(),
+                out int bookingID))
             {
-                db.ExecuteNonQuery(
-                  "UPDATE Booking SET " +
-                  "UserID=" + currentUser.UserID + "," +
-                  "DeviceID=" + deviceID + "," +
-                  "TotalHours=" + hours + "," +
-                  "EndTime=DATEADD(HOUR," + hours + ",StartTime)," +
-                  "BookingStatus='" + (status == "Paid" ? "Completed" : status == "Refunded" ? "Cancelled" : "Active") + "'," +
-                  "Notes='" + notes + "'," +
-                  "CustomerName='" + customer + "' " +
-                  "WHERE BookingID=" + bookingID
+                return;
+            }
+
+            LoadBookingDetails(
+                bookingID
+            );
+        }
+
+        // =====================================================
+        // LOAD BOOKING DETAILS
+        // =====================================================
+
+        private void LoadBookingDetails(
+            int bookingID)
+        {
+            DBAccessHelper db =
+                new DBAccessHelper();
+
+            string query =
+                "SELECT " +
+
+                "Booking.BookingID, " +
+                "Booking.CustomerName, " +
+                "Booking.TotalHours, " +
+
+                "Device.DeviceName, " +
+                "Device.HourlyRate " +
+
+                "FROM Booking " +
+
+                "INNER JOIN Device " +
+                "ON Booking.DeviceID = Device.DeviceID " +
+
+                "WHERE Booking.BookingID=" +
+                bookingID;
+
+            ResultSet result =
+                db.GetQueryData(query);
+
+            if (result.HasError ||
+                result.Data == null ||
+                result.Data.Rows.Count == 0)
+            {
+                return;
+            }
+
+            DataRow row =
+                result.Data.Rows[0];
+
+            string customerName =
+                row["CustomerName"].ToString();
+
+            string deviceName =
+                row["DeviceName"].ToString();
+
+            double totalHours =
+                Convert.ToDouble(
+                    row["TotalHours"]
                 );
 
-                db.ExecuteNonQuery(
-                  "UPDATE Payment SET " +
-                  "PaymentAmount=" + totalAmount + "," +
-                  "PaymentMethod='" + method + "'," +
-                  "PaymentStatus='" + status + "' " +
-                  "WHERE PaymentID=" + paymentID
+            double hourlyRate =
+                Convert.ToDouble(
+                    row["HourlyRate"]
                 );
 
-                if (oldDeviceID != deviceID)
-                {
-                    db.ExecuteNonQuery("UPDATE Device SET Status='Available' WHERE DeviceID=" + oldDeviceID);
-                }
+            double deviceCharge =
+                totalHours * hourlyRate;
 
-                db.ExecuteNonQuery("UPDATE Device SET Status='" + GetDeviceStatus(status) + "' WHERE DeviceID=" + deviceID);
+            // =====================================================
+            // FOOD CHARGE
+            // =====================================================
 
-                MessageBox.Show("Payment updated.");
-                Close();
+            double foodCharge = 0;
+
+            string foodQuery =
+                "SELECT " +
+                "ISNULL(SUM(Price * Quantity), 0) " +
+                "AS FoodCharge " +
+
+                "FROM FoodItem " +
+
+                "WHERE BookingID=" +
+                bookingID;
+
+            ResultSet foodResult =
+                db.GetQueryData(foodQuery);
+
+            if (!foodResult.HasError &&
+                foodResult.Data != null &&
+                foodResult.Data.Rows.Count > 0)
+            {
+                foodCharge =
+                    Convert.ToDouble(
+                        foodResult.Data.Rows[0]["FoodCharge"]
+                    );
             }
 
             // =====================================================
-            // INSERT
+            // TOTAL
             // =====================================================
+
+            double totalAmount =
+                deviceCharge + foodCharge;
+
+            // =====================================================
+            // SHOW DETAILS
+            // =====================================================
+
+            txtBookingRef.Text =
+                bookingID.ToString();
+
+            txtCustomer.Text =
+                customerName;
+
+            txtDeviceName.Text =
+                deviceName;
+
+            txtHours.Text =
+                totalHours.ToString("0.00");
+
+            txtCharge.Text =
+                deviceCharge.ToString("0.00");
+
+            txtFood.Text =
+                foodCharge.ToString("0.00");
+
+            txtTotal.Text =
+                totalAmount.ToString("0.00");
+        }
+
+        // =====================================================
+        // CREATE / UPDATE PAYMENT
+        // =====================================================
+
+        private void btnCreate_Click(
+            object sender,
+            EventArgs e)
+        {
+            // =====================================================
+            // VALIDATION
+            // =====================================================
+
+            if (cbBookingRef.SelectedValue == null)
+            {
+                MessageBox.Show(
+                    "Please select a booking."
+                );
+
+                return;
+            }
+
+            if (cbPaymentMethods.SelectedItem == null)
+            {
+                MessageBox.Show(
+                    "Please select a payment method."
+                );
+
+                return;
+            }
+
+            // =====================================================
+            // PAYMENT STATUS
+            // =====================================================
+
+            string paymentStatus = "";
+
+            if (rbtnPaid.Checked)
+            {
+                paymentStatus = "Paid";
+            }
+
+            else if (rbtnPending.Checked)
+            {
+                paymentStatus = "Pending";
+            }
+
+            else if (rbtnRefund.Checked)
+            {
+                paymentStatus = "Refunded";
+            }
+
             else
             {
-                db.ExecuteNonQuery(
-                  "INSERT INTO Booking (UserID,DeviceID,StartTime,EndTime,TotalHours,BookingDate,BookingStatus,Notes,CustomerName,CustomerPhone) " +
-                  "VALUES (" +
-                  currentUser.UserID + "," + deviceID + ",GETDATE()," +
-                  "DATEADD(HOUR," + hours + ",GETDATE())," +
-                  hours + ",GETDATE()," +
-                  "'" + (status == "Paid" ? "Completed" : status == "Refunded" ? "Cancelled" : "Active") + "'," +
-                  "'" + notes + "','" + customer + "','')"
+                MessageBox.Show(
+                    "Please select payment status."
                 );
 
-                int newBookingID =
-                  Convert.ToInt32(db.GetQueryData("SELECT TOP 1 BookingID FROM Booking ORDER BY BookingID DESC")
-                    .Data.Rows[0]["BookingID"]);
-
-                db.ExecuteNonQuery(
-                  "INSERT INTO Payment (BookingID,PaymentAmount,PaymentMethod,PaymentDate,PaymentStatus,CreatedAt) " +
-                  "VALUES (" + newBookingID + "," + totalAmount + ",'" + method + "',GETDATE(),'" + status + "',GETDATE())"
-                );
-
-                db.ExecuteNonQuery("UPDATE Device SET Status='" + GetDeviceStatus(status) + "' WHERE DeviceID=" + deviceID);
-
-                MessageBox.Show("Payment created.");
-                LoadDevices();
-                btnReset.PerformClick();
+                return;
             }
+
+            // =====================================================
+            // VALUES
+            // =====================================================
+
+            int bookingID =
+                Convert.ToInt32(
+                    cbBookingRef.SelectedValue
+                );
+
+            double totalAmount =
+                Convert.ToDouble(
+                    txtTotal.Text
+                );
+
+            string paymentMethod =
+                cbPaymentMethods.Text;
+
+            string paymentDate =
+                dtpDop.Value.ToString("yyyy-MM-dd");
+
+            string createdAt =
+                DateTime.Now.ToString(
+                    "yyyy-MM-dd HH:mm:ss"
+                );
+
+            DBAccessHelper db =
+                new DBAccessHelper();
+
+            // =====================================================
+            // GET DEVICE ID
+            // =====================================================
+
+            int deviceID = 0;
+
+            ResultSet deviceResult =
+                db.GetQueryData(
+
+                "SELECT DeviceID " +
+                "FROM Booking " +
+                "WHERE BookingID=" +
+                bookingID
+            );
+
+            if (!deviceResult.HasError &&
+                deviceResult.Data != null &&
+                deviceResult.Data.Rows.Count > 0)
+            {
+                deviceID =
+                    Convert.ToInt32(
+                        deviceResult.Data.Rows[0]["DeviceID"]
+                    );
+            }
+
+            // =====================================================
+            // INSERT MODE
+            // =====================================================
+
+            if (!isUpdateMode)
+            {
+                string insertQuery =
+                    "INSERT INTO Payment " +
+
+                    "(BookingID, " +
+                    "PaymentAmount, " +
+                    "PaymentMethod, " +
+                    "PaymentDate, " +
+                    "PaymentStatus, " +
+                    "CreatedAt) " +
+
+                    "VALUES (" +
+
+                    bookingID + ", " +
+
+                    totalAmount + ", '" +
+
+                    paymentMethod.Replace("'", "''") + "', '" +
+
+                    paymentDate + "', '" +
+
+                    paymentStatus + "', '" +
+
+                    createdAt + "')";
+
+                ResultSet result =
+                    db.ExecuteNonQuery(insertQuery);
+
+                if (result.HasError)
+                {
+                    MessageBox.Show(
+                        result.Message,
+                        "Payment Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    return;
+                }
+            }
+
+            // =====================================================
+            // UPDATE MODE
+            // =====================================================
+
+            else
+            {
+                string updateQuery =
+                    "UPDATE Payment SET " +
+
+                    "BookingID=" + bookingID + ", " +
+
+                    "PaymentAmount=" + totalAmount + ", " +
+
+                    "PaymentMethod='" +
+                    paymentMethod.Replace("'", "''") + "', " +
+
+                    "PaymentDate='" +
+                    paymentDate + "', " +
+
+                    "PaymentStatus='" +
+                    paymentStatus + "' " +
+
+                    "WHERE PaymentID=" +
+                    paymentID;
+
+                ResultSet result =
+                    db.ExecuteNonQuery(updateQuery);
+
+                if (result.HasError)
+                {
+                    MessageBox.Show(
+                        result.Message,
+                        "Update Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    return;
+                }
+            }
+
+            // =====================================================
+            // STATUS HANDLING
+            // =====================================================
+
+            string bookingStatus =
+                "Completed";
+
+            string deviceStatus =
+                "Available";
+
+            if (paymentStatus == "Pending")
+            {
+                bookingStatus =
+                    "Active";
+
+                deviceStatus =
+                    "Occupied";
+            }
+
+            else if (paymentStatus == "Refunded")
+            {
+                bookingStatus =
+                    "Cancelled";
+
+                deviceStatus =
+                    "Available";
+            }
+
+            else if (paymentStatus == "Paid")
+            {
+                bookingStatus =
+                    "Completed";
+
+                deviceStatus =
+                    "Available";
+            }
+
+            // =====================================================
+            // UPDATE BOOKING
+            // =====================================================
+
+            db.ExecuteNonQuery(
+
+                "UPDATE Booking SET " +
+
+                "BookingStatus='" +
+                bookingStatus + "' " +
+
+                "WHERE BookingID=" +
+                bookingID
+            );
+
+            // =====================================================
+            // UPDATE DEVICE
+            // =====================================================
+
+            db.ExecuteNonQuery(
+
+                "UPDATE Device SET " +
+
+                "Status='" +
+                deviceStatus + "' " +
+
+                "WHERE DeviceID=" +
+                deviceID
+            );
+
+            // =====================================================
+            // SUCCESS
+            // =====================================================
+
+            if (!isUpdateMode)
+            {
+                MessageBox.Show(
+                    "Payment created successfully!",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
+
+            else
+            {
+                MessageBox.Show(
+                    "Payment updated successfully!",
+                    "Success",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+            }
+
+            ResetScreen();
+
+            this.Close();
         }
 
         // =====================================================
-        // RESET
+        // RESET SCREEN
         // =====================================================
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void ResetScreen()
         {
-            cbDevice.SelectedIndex = -1;
-            cbPaymentMethods.SelectedIndex = -1;
-            txtCustomer.Clear();
-            txtHours.Clear();
-            txtNote.Clear();
-            txtFood.Clear();
+            txtBookingRef.Clear();
+            txtDeviceName.Clear();
             txtCharge.Clear();
+            txtCustomer.Clear();
+            txtFood.Clear();
             txtTotal.Clear();
+            txtHours.Clear();
+
+            txtCharge.Text = "0.00";
+            txtFood.Text = "0.00";
+            txtTotal.Text = "0.00";
+
+            cbBookingRef.SelectedIndex = -1;
+
+            cbPaymentMethods.SelectedIndex = -1;
 
             rbtnPaid.Checked = false;
-            rbtnRefund.Checked = false;
             rbtnPending.Checked = false;
+            rbtnRefund.Checked = false;
 
-            bookingID = 0;
-            oldDeviceID = 0;
+            dtpDop.Value =
+                DateTime.Now;
         }
 
-        private void AddPaymentForm_Load(object sender, EventArgs e)
+        // =====================================================
+        // RESET BUTTON
+        // =====================================================
+
+        private void btnReset_Click(
+            object sender,
+            EventArgs e)
         {
-            if (!isUpdateMode)
-                LoadDevices();
+            ResetScreen();
         }
 
-        private void cbDevice_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculateCharges();
-        }
+        // =====================================================
+        // CANCEL BUTTON
+        // =====================================================
 
-        private void txtHours_TextChanged(object sender, EventArgs e)
+        private void btnCancel_Click(
+            object sender,
+            EventArgs e)
         {
-            CalculateCharges();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
+            this.Close();
         }
     }
 }

@@ -45,21 +45,21 @@
             this.lblPaymentMethod = new System.Windows.Forms.Label();
             this.lblPaymentStatus = new System.Windows.Forms.Label();
             this.lblPaymentDate = new System.Windows.Forms.Label();
-            this.lblNotes = new System.Windows.Forms.Label();
             this.pnlData = new System.Windows.Forms.Panel();
+            this.txtCustomer = new System.Windows.Forms.TextBox();
+            this.lblNameCust = new System.Windows.Forms.Label();
+            this.cbBookingRef = new System.Windows.Forms.ComboBox();
+            this.txtDeviceName = new System.Windows.Forms.TextBox();
             this.lblFood = new System.Windows.Forms.Label();
             this.txtFood = new System.Windows.Forms.TextBox();
             this.rbtnPending = new System.Windows.Forms.RadioButton();
             this.rbtnRefund = new System.Windows.Forms.RadioButton();
             this.rbtnPaid = new System.Windows.Forms.RadioButton();
-            this.txtNote = new System.Windows.Forms.TextBox();
-            this.cbDevice = new System.Windows.Forms.ComboBox();
             this.txtTotal = new System.Windows.Forms.TextBox();
             this.txtCharge = new System.Windows.Forms.TextBox();
             this.txtHours = new System.Windows.Forms.TextBox();
             this.pnlMiddle = new System.Windows.Forms.Panel();
-            this.txtCustomer = new System.Windows.Forms.TextBox();
-            this.txtBookingID = new System.Windows.Forms.TextBox();
+            this.txtBookingRef = new System.Windows.Forms.TextBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnCreate = new System.Windows.Forms.Button();
             this.pnlFooter = new System.Windows.Forms.Panel();
@@ -82,7 +82,7 @@
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.White;
-            this.btnCancel.Location = new System.Drawing.Point(920, 538);
+            this.btnCancel.Location = new System.Drawing.Point(920, 607);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(442, 72);
             this.btnCancel.TabIndex = 34;
@@ -193,11 +193,11 @@
             this.lblCustomer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblCustomer.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblCustomer.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblCustomer.Location = new System.Drawing.Point(58, 142);
+            this.lblCustomer.Location = new System.Drawing.Point(57, 133);
             this.lblCustomer.Name = "lblCustomer";
-            this.lblCustomer.Size = new System.Drawing.Size(174, 45);
+            this.lblCustomer.Size = new System.Drawing.Size(156, 45);
             this.lblCustomer.TabIndex = 39;
-            this.lblCustomer.Text = "Customer:";
+            this.lblCustomer.Text = "Booking:";
             this.lblCustomer.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblDevice
@@ -207,7 +207,7 @@
             this.lblDevice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblDevice.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblDevice.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblDevice.Location = new System.Drawing.Point(58, 205);
+            this.lblDevice.Location = new System.Drawing.Point(58, 264);
             this.lblDevice.Name = "lblDevice";
             this.lblDevice.Size = new System.Drawing.Size(128, 45);
             this.lblDevice.TabIndex = 40;
@@ -221,7 +221,7 @@
             this.lblHours.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblHours.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblHours.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblHours.Location = new System.Drawing.Point(58, 276);
+            this.lblHours.Location = new System.Drawing.Point(58, 329);
             this.lblHours.Name = "lblHours";
             this.lblHours.Size = new System.Drawing.Size(120, 45);
             this.lblHours.TabIndex = 41;
@@ -235,7 +235,7 @@
             this.lblDeviceCharge.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblDeviceCharge.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblDeviceCharge.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblDeviceCharge.Location = new System.Drawing.Point(58, 339);
+            this.lblDeviceCharge.Location = new System.Drawing.Point(58, 393);
             this.lblDeviceCharge.Name = "lblDeviceCharge";
             this.lblDeviceCharge.Size = new System.Drawing.Size(243, 45);
             this.lblDeviceCharge.TabIndex = 42;
@@ -249,7 +249,7 @@
             this.lblTotalAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblTotalAmount.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblTotalAmount.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblTotalAmount.Location = new System.Drawing.Point(58, 461);
+            this.lblTotalAmount.Location = new System.Drawing.Point(58, 520);
             this.lblTotalAmount.Name = "lblTotalAmount";
             this.lblTotalAmount.Size = new System.Drawing.Size(234, 45);
             this.lblTotalAmount.TabIndex = 43;
@@ -263,7 +263,7 @@
             this.lblPaymentMethod.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblPaymentMethod.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblPaymentMethod.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblPaymentMethod.Location = new System.Drawing.Point(707, 106);
+            this.lblPaymentMethod.Location = new System.Drawing.Point(707, 142);
             this.lblPaymentMethod.Name = "lblPaymentMethod";
             this.lblPaymentMethod.Size = new System.Drawing.Size(287, 45);
             this.lblPaymentMethod.TabIndex = 44;
@@ -277,7 +277,7 @@
             this.lblPaymentStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblPaymentStatus.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblPaymentStatus.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblPaymentStatus.Location = new System.Drawing.Point(707, 158);
+            this.lblPaymentStatus.Location = new System.Drawing.Point(707, 227);
             this.lblPaymentStatus.Name = "lblPaymentStatus";
             this.lblPaymentStatus.Size = new System.Drawing.Size(259, 45);
             this.lblPaymentStatus.TabIndex = 45;
@@ -291,44 +291,31 @@
             this.lblPaymentDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblPaymentDate.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblPaymentDate.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblPaymentDate.Location = new System.Drawing.Point(707, 210);
+            this.lblPaymentDate.Location = new System.Drawing.Point(707, 382);
             this.lblPaymentDate.Name = "lblPaymentDate";
             this.lblPaymentDate.Size = new System.Drawing.Size(238, 45);
             this.lblPaymentDate.TabIndex = 46;
             this.lblPaymentDate.Text = "Payment Date:";
             this.lblPaymentDate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // lblNotes
-            // 
-            this.lblNotes.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblNotes.AutoSize = true;
-            this.lblNotes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
-            this.lblNotes.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblNotes.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblNotes.Location = new System.Drawing.Point(708, 307);
-            this.lblNotes.Name = "lblNotes";
-            this.lblNotes.Size = new System.Drawing.Size(117, 45);
-            this.lblNotes.TabIndex = 47;
-            this.lblNotes.Text = "Notes:";
-            this.lblNotes.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // pnlData
             // 
             this.pnlData.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pnlData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.pnlData.Controls.Add(this.txtCustomer);
+            this.pnlData.Controls.Add(this.lblNameCust);
+            this.pnlData.Controls.Add(this.cbBookingRef);
+            this.pnlData.Controls.Add(this.txtDeviceName);
             this.pnlData.Controls.Add(this.lblFood);
             this.pnlData.Controls.Add(this.txtFood);
             this.pnlData.Controls.Add(this.rbtnPending);
             this.pnlData.Controls.Add(this.rbtnRefund);
             this.pnlData.Controls.Add(this.rbtnPaid);
-            this.pnlData.Controls.Add(this.txtNote);
-            this.pnlData.Controls.Add(this.cbDevice);
             this.pnlData.Controls.Add(this.txtTotal);
             this.pnlData.Controls.Add(this.txtCharge);
             this.pnlData.Controls.Add(this.txtHours);
             this.pnlData.Controls.Add(this.pnlMiddle);
-            this.pnlData.Controls.Add(this.txtCustomer);
-            this.pnlData.Controls.Add(this.txtBookingID);
+            this.pnlData.Controls.Add(this.txtBookingRef);
             this.pnlData.Controls.Add(this.btnReset);
             this.pnlData.Controls.Add(this.btnCreate);
             this.pnlData.Controls.Add(this.pnlFooter);
@@ -338,7 +325,6 @@
             this.pnlData.Controls.Add(this.lblCustomer);
             this.pnlData.Controls.Add(this.cbPaymentMethods);
             this.pnlData.Controls.Add(this.lblDevice);
-            this.pnlData.Controls.Add(this.lblNotes);
             this.pnlData.Controls.Add(this.lblTotalAmount);
             this.pnlData.Controls.Add(this.lblPaymentDate);
             this.pnlData.Controls.Add(this.lblHours);
@@ -348,8 +334,64 @@
             this.pnlData.Controls.Add(this.pnlStyleUp);
             this.pnlData.Location = new System.Drawing.Point(51, 336);
             this.pnlData.Name = "pnlData";
-            this.pnlData.Size = new System.Drawing.Size(1378, 697);
+            this.pnlData.Size = new System.Drawing.Size(1378, 746);
             this.pnlData.TabIndex = 48;
+            // 
+            // txtCustomer
+            // 
+            this.txtCustomer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
+            this.txtCustomer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCustomer.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.txtCustomer.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.txtCustomer.Location = new System.Drawing.Point(185, 198);
+            this.txtCustomer.Name = "txtCustomer";
+            this.txtCustomer.ReadOnly = true;
+            this.txtCustomer.Size = new System.Drawing.Size(433, 50);
+            this.txtCustomer.TabIndex = 63;
+            // 
+            // lblNameCust
+            // 
+            this.lblNameCust.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblNameCust.AutoSize = true;
+            this.lblNameCust.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
+            this.lblNameCust.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblNameCust.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.lblNameCust.Location = new System.Drawing.Point(57, 198);
+            this.lblNameCust.Name = "lblNameCust";
+            this.lblNameCust.Size = new System.Drawing.Size(117, 45);
+            this.lblNameCust.TabIndex = 62;
+            this.lblNameCust.Text = "Name:";
+            this.lblNameCust.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // cbBookingRef
+            // 
+            this.cbBookingRef.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
+            this.cbBookingRef.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cbBookingRef.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbBookingRef.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.cbBookingRef.FormattingEnabled = true;
+            this.cbBookingRef.Items.AddRange(new object[] {
+            "Cash",
+            "Bkash",
+            "Nagad",
+            "Rocket",
+            "Card"});
+            this.cbBookingRef.Location = new System.Drawing.Point(268, 142);
+            this.cbBookingRef.Name = "cbBookingRef";
+            this.cbBookingRef.Size = new System.Drawing.Size(350, 36);
+            this.cbBookingRef.TabIndex = 61;
+            // 
+            // txtDeviceName
+            // 
+            this.txtDeviceName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
+            this.txtDeviceName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDeviceName.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.txtDeviceName.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.txtDeviceName.Location = new System.Drawing.Point(185, 264);
+            this.txtDeviceName.Name = "txtDeviceName";
+            this.txtDeviceName.ReadOnly = true;
+            this.txtDeviceName.Size = new System.Drawing.Size(433, 50);
+            this.txtDeviceName.TabIndex = 60;
             // 
             // lblFood
             // 
@@ -358,7 +400,7 @@
             this.lblFood.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.lblFood.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.lblFood.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.lblFood.Location = new System.Drawing.Point(58, 401);
+            this.lblFood.Location = new System.Drawing.Point(58, 458);
             this.lblFood.Name = "lblFood";
             this.lblFood.Size = new System.Drawing.Size(221, 45);
             this.lblFood.TabIndex = 59;
@@ -371,10 +413,10 @@
             this.txtFood.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFood.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.txtFood.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtFood.Location = new System.Drawing.Point(285, 403);
+            this.txtFood.Location = new System.Drawing.Point(301, 460);
             this.txtFood.Name = "txtFood";
             this.txtFood.ReadOnly = true;
-            this.txtFood.Size = new System.Drawing.Size(333, 50);
+            this.txtFood.Size = new System.Drawing.Size(317, 50);
             this.txtFood.TabIndex = 58;
             // 
             // rbtnPending
@@ -383,7 +425,7 @@
             this.rbtnPending.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.rbtnPending.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.rbtnPending.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(193)))), ((int)(((byte)(7)))));
-            this.rbtnPending.Location = new System.Drawing.Point(1225, 169);
+            this.rbtnPending.Location = new System.Drawing.Point(964, 326);
             this.rbtnPending.Name = "rbtnPending";
             this.rbtnPending.Size = new System.Drawing.Size(133, 36);
             this.rbtnPending.TabIndex = 57;
@@ -397,7 +439,7 @@
             this.rbtnRefund.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.rbtnRefund.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.rbtnRefund.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.rbtnRefund.Location = new System.Drawing.Point(1064, 168);
+            this.rbtnRefund.Location = new System.Drawing.Point(964, 278);
             this.rbtnRefund.Name = "rbtnRefund";
             this.rbtnRefund.Size = new System.Drawing.Size(149, 36);
             this.rbtnRefund.TabIndex = 30;
@@ -411,7 +453,7 @@
             this.rbtnPaid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(60)))));
             this.rbtnPaid.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.rbtnPaid.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(220)))), ((int)(((byte)(120)))));
-            this.rbtnPaid.Location = new System.Drawing.Point(964, 167);
+            this.rbtnPaid.Location = new System.Drawing.Point(964, 236);
             this.rbtnPaid.Name = "rbtnPaid";
             this.rbtnPaid.Size = new System.Drawing.Size(88, 36);
             this.rbtnPaid.TabIndex = 28;
@@ -419,41 +461,16 @@
             this.rbtnPaid.Text = "Paid";
             this.rbtnPaid.UseVisualStyleBackColor = false;
             // 
-            // txtNote
-            // 
-            this.txtNote.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
-            this.txtNote.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtNote.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.txtNote.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtNote.Location = new System.Drawing.Point(831, 319);
-            this.txtNote.Multiline = true;
-            this.txtNote.Name = "txtNote";
-            this.txtNote.Size = new System.Drawing.Size(527, 131);
-            this.txtNote.TabIndex = 56;
-            // 
-            // cbDevice
-            // 
-            this.cbDevice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
-            this.cbDevice.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cbDevice.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbDevice.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.cbDevice.FormattingEnabled = true;
-            this.cbDevice.Location = new System.Drawing.Point(185, 214);
-            this.cbDevice.Name = "cbDevice";
-            this.cbDevice.Size = new System.Drawing.Size(433, 36);
-            this.cbDevice.TabIndex = 55;
-            this.cbDevice.SelectedIndexChanged += new System.EventHandler(this.cbDevice_SelectedIndexChanged);
-            // 
             // txtTotal
             // 
             this.txtTotal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
             this.txtTotal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTotal.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.txtTotal.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtTotal.Location = new System.Drawing.Point(285, 464);
+            this.txtTotal.Location = new System.Drawing.Point(298, 523);
             this.txtTotal.Name = "txtTotal";
             this.txtTotal.ReadOnly = true;
-            this.txtTotal.Size = new System.Drawing.Size(333, 50);
+            this.txtTotal.Size = new System.Drawing.Size(320, 50);
             this.txtTotal.TabIndex = 54;
             // 
             // txtCharge
@@ -462,7 +479,7 @@
             this.txtCharge.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCharge.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.txtCharge.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtCharge.Location = new System.Drawing.Point(301, 341);
+            this.txtCharge.Location = new System.Drawing.Point(301, 395);
             this.txtCharge.Name = "txtCharge";
             this.txtCharge.ReadOnly = true;
             this.txtCharge.Size = new System.Drawing.Size(317, 50);
@@ -474,44 +491,33 @@
             this.txtHours.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtHours.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.txtHours.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtHours.Location = new System.Drawing.Point(174, 276);
+            this.txtHours.Location = new System.Drawing.Point(184, 329);
             this.txtHours.Name = "txtHours";
-            this.txtHours.Size = new System.Drawing.Size(444, 50);
+            this.txtHours.ReadOnly = true;
+            this.txtHours.Size = new System.Drawing.Size(434, 50);
             this.txtHours.TabIndex = 52;
-            this.txtHours.TextChanged += new System.EventHandler(this.txtHours_TextChanged);
             // 
             // pnlMiddle
             // 
             this.pnlMiddle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
             this.pnlMiddle.Location = new System.Drawing.Point(654, 73);
             this.pnlMiddle.Name = "pnlMiddle";
-            this.pnlMiddle.Size = new System.Drawing.Size(25, 441);
+            this.pnlMiddle.Size = new System.Drawing.Size(25, 518);
             this.pnlMiddle.TabIndex = 50;
             // 
-            // txtCustomer
+            // txtBookingRef
             // 
-            this.txtCustomer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
-            this.txtCustomer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtCustomer.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.txtCustomer.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtCustomer.Location = new System.Drawing.Point(231, 142);
-            this.txtCustomer.Name = "txtCustomer";
-            this.txtCustomer.Size = new System.Drawing.Size(387, 50);
-            this.txtCustomer.TabIndex = 49;
-            // 
-            // txtBookingID
-            // 
-            this.txtBookingID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
-            this.txtBookingID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBookingID.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.txtBookingID.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.txtBookingID.Location = new System.Drawing.Point(268, 74);
-            this.txtBookingID.Name = "txtBookingID";
-            this.txtBookingID.ReadOnly = true;
-            this.txtBookingID.Size = new System.Drawing.Size(349, 50);
-            this.txtBookingID.TabIndex = 48;
-            this.txtBookingID.Text = "Auto Generated";
-            this.txtBookingID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtBookingRef.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(75)))));
+            this.txtBookingRef.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBookingRef.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.txtBookingRef.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.txtBookingRef.Location = new System.Drawing.Point(268, 74);
+            this.txtBookingRef.Name = "txtBookingRef";
+            this.txtBookingRef.ReadOnly = true;
+            this.txtBookingRef.Size = new System.Drawing.Size(349, 50);
+            this.txtBookingRef.TabIndex = 48;
+            this.txtBookingRef.Text = "Auto Generated";
+            this.txtBookingRef.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnReset
             // 
@@ -519,7 +525,7 @@
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReset.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReset.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnReset.Location = new System.Drawing.Point(610, 538);
+            this.btnReset.Location = new System.Drawing.Point(610, 607);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(280, 72);
             this.btnReset.TabIndex = 36;
@@ -533,9 +539,9 @@
             this.btnCreate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCreate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCreate.ForeColor = System.Drawing.Color.White;
-            this.btnCreate.Location = new System.Drawing.Point(73, 538);
+            this.btnCreate.Location = new System.Drawing.Point(66, 607);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(509, 72);
+            this.btnCreate.Size = new System.Drawing.Size(516, 72);
             this.btnCreate.TabIndex = 31;
             this.btnCreate.Text = "CREATE PAYMENT";
             this.btnCreate.UseVisualStyleBackColor = false;
@@ -546,7 +552,7 @@
             this.pnlFooter.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(90)))), ((int)(((byte)(110)))));
             this.pnlFooter.Controls.Add(this.lblMessage);
-            this.pnlFooter.Location = new System.Drawing.Point(0, 648);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 694);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(1378, 49);
             this.pnlFooter.TabIndex = 35;
@@ -573,7 +579,7 @@
             this.dtpDop.CalendarTitleForeColor = System.Drawing.Color.WhiteSmoke;
             this.dtpDop.CalendarTrailingForeColor = System.Drawing.Color.Gray;
             this.dtpDop.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold);
-            this.dtpDop.Location = new System.Drawing.Point(951, 223);
+            this.dtpDop.Location = new System.Drawing.Point(951, 395);
             this.dtpDop.Name = "dtpDop";
             this.dtpDop.Size = new System.Drawing.Size(407, 29);
             this.dtpDop.TabIndex = 18;
@@ -591,7 +597,7 @@
             "Nagad",
             "Rocket",
             "Card"});
-            this.cbPaymentMethods.Location = new System.Drawing.Point(1000, 110);
+            this.cbPaymentMethods.Location = new System.Drawing.Point(1000, 146);
             this.cbPaymentMethods.Name = "cbPaymentMethods";
             this.cbPaymentMethods.Size = new System.Drawing.Size(358, 36);
             this.cbPaymentMethods.TabIndex = 21;
@@ -611,7 +617,7 @@
             this.pnlRIGHT.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
             this.pnlRIGHT.Location = new System.Drawing.Point(1460, -11);
             this.pnlRIGHT.Name = "pnlRIGHT";
-            this.pnlRIGHT.Size = new System.Drawing.Size(71, 1162);
+            this.pnlRIGHT.Size = new System.Drawing.Size(71, 1223);
             this.pnlRIGHT.TabIndex = 51;
             // 
             // pnlLeft
@@ -619,7 +625,7 @@
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(60)))), ((int)(((byte)(90)))));
             this.pnlLeft.Location = new System.Drawing.Point(-98, -34);
             this.pnlLeft.Name = "pnlLeft";
-            this.pnlLeft.Size = new System.Drawing.Size(123, 1215);
+            this.pnlLeft.Size = new System.Drawing.Size(123, 1246);
             this.pnlLeft.TabIndex = 52;
             // 
             // AddPaymentForm
@@ -627,7 +633,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(1487, 1075);
+            this.ClientSize = new System.Drawing.Size(1487, 1163);
             this.Controls.Add(this.pnlLeft);
             this.Controls.Add(this.pnlRIGHT);
             this.Controls.Add(this.pnlHeader);
@@ -638,7 +644,6 @@
             this.Name = "AddPaymentForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddPaymentForm";
-            this.Load += new System.EventHandler(this.AddPaymentForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
@@ -670,7 +675,6 @@
         private System.Windows.Forms.Label lblPaymentMethod;
         private System.Windows.Forms.Label lblPaymentStatus;
         private System.Windows.Forms.Label lblPaymentDate;
-        private System.Windows.Forms.Label lblNotes;
         private System.Windows.Forms.Panel pnlData;
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Label lblMessage;
@@ -680,8 +684,7 @@
         private System.Windows.Forms.RadioButton rbtnPaid;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.ComboBox cbPaymentMethods;
-        private System.Windows.Forms.TextBox txtBookingID;
-        private System.Windows.Forms.TextBox txtCustomer;
+        private System.Windows.Forms.TextBox txtBookingRef;
         private System.Windows.Forms.Panel pnlStyleUp;
         private System.Windows.Forms.Panel pnlMiddle;
         private System.Windows.Forms.Panel pnlRIGHT;
@@ -689,10 +692,12 @@
         private System.Windows.Forms.TextBox txtHours;
         private System.Windows.Forms.TextBox txtTotal;
         private System.Windows.Forms.TextBox txtCharge;
-        private System.Windows.Forms.ComboBox cbDevice;
-        private System.Windows.Forms.TextBox txtNote;
         private System.Windows.Forms.RadioButton rbtnPending;
         private System.Windows.Forms.TextBox txtFood;
         private System.Windows.Forms.Label lblFood;
+        private System.Windows.Forms.TextBox txtDeviceName;
+        private System.Windows.Forms.ComboBox cbBookingRef;
+        private System.Windows.Forms.TextBox txtCustomer;
+        private System.Windows.Forms.Label lblNameCust;
     }
 }

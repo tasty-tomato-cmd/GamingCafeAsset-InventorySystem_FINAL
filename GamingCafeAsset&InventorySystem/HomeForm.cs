@@ -261,24 +261,32 @@ namespace GamingCafeAsset_InventorySystem
         private void LoadPaymentsData()
         {
             LoadData(
+
               "SELECT " +
+
               "Payment.PaymentID AS [Payment No.], " +
-              "Payment.BookingID AS BookingID, " +
-              "Booking.DeviceID AS DeviceID, " +
+              "Payment.BookingID AS [Booking No.], " +
 
               "Booking.CustomerName AS [Customer Name], " +
-              "ISNULL(Device.DeviceName, 'No Device') AS [Device], " +
 
-              "CAST(ROUND(Booking.TotalHours, 2) AS DECIMAL(10,2)) AS [Total Hours], " +
+              "ISNULL(Device.DeviceName, 'No Device') " +
+              "AS [Device], " +
+
+              "CAST(ROUND(Booking.TotalHours, 2) " +
+              "AS DECIMAL(10,2)) AS [Total Hours], " +
 
               "CAST(ROUND(CASE " +
-              "WHEN Booking.BookingStatus = 'Cancelled' THEN 0 " +
+              "WHEN Booking.BookingStatus = 'Cancelled' " +
+              "THEN 0 " +
               "ELSE ISNULL(Device.HourlyRate,0) * Booking.TotalHours " +
-              "END, 2) AS DECIMAL(10,2)) AS [Device Charge], " +
+              "END, 2) AS DECIMAL(10,2)) " +
+              "AS [Device Charge], " +
 
-              "CAST(ROUND(ISNULL(FoodTotals.FoodCharge, 0), 2) AS DECIMAL(10,2)) AS [Food Charge], " +
+              "CAST(ROUND(ISNULL(FoodTotals.FoodCharge, 0), 2) " +
+              "AS DECIMAL(10,2)) AS [Food Charge], " +
 
-              "CAST(ROUND(Payment.PaymentAmount, 2) AS DECIMAL(10,2)) AS [Total Amount], " +
+              "CAST(ROUND(Payment.PaymentAmount, 2) " +
+              "AS DECIMAL(10,2)) AS [Total Amount], " +
 
               "Payment.PaymentMethod AS [Payment Method], " +
               "Payment.PaymentDate AS [Payment Date], " +
@@ -288,13 +296,27 @@ namespace GamingCafeAsset_InventorySystem
               "ISNULL(Booking.Notes, '') AS [Notes] " +
 
               "FROM Payment " +
-              "JOIN Booking ON Payment.BookingID = Booking.BookingID " +
-              "LEFT JOIN Device ON Booking.DeviceID = Device.DeviceID " +
+
+              "INNER JOIN Booking " +
+              "ON Payment.BookingID = Booking.BookingID " +
+
+              "LEFT JOIN Device " +
+              "ON Booking.DeviceID = Device.DeviceID " +
 
               "LEFT JOIN ( " +
-              "SELECT BookingID, SUM(Price * Quantity) AS FoodCharge " +
-              "FROM FoodItem GROUP BY BookingID " +
-              ") FoodTotals ON Booking.BookingID = FoodTotals.BookingID"
+
+              "SELECT " +
+              "BookingID, " +
+              "SUM(Price * Quantity) AS FoodCharge " +
+
+              "FROM FoodItem " +
+
+              "GROUP BY BookingID " +
+
+              ") FoodTotals " +
+
+              "ON Booking.BookingID = FoodTotals.BookingID"
+
             );
         }
 
@@ -727,18 +749,24 @@ namespace GamingCafeAsset_InventorySystem
                       "Payment.PaymentID AS [Payment No.], " +
                       "Booking.BookingID AS [Booking No.], " +
                       "Booking.CustomerName AS [Customer Name], " +
-                      "ISNULL(Device.DeviceName, 'No Device') AS [Device], " +
 
-                      "CAST(ROUND(Booking.TotalHours, 2) AS DECIMAL(10,2)) AS [Total Hours], " +
+                      "ISNULL(Device.DeviceName, 'No Device') " +
+                      "AS [Device], " +
+
+                      "CAST(ROUND(Booking.TotalHours, 2) " +
+                      "AS DECIMAL(10,2)) AS [Total Hours], " +
 
                       "CAST(ROUND(CASE " +
                       "WHEN Booking.BookingStatus = 'Cancelled' THEN 0 " +
-                      "ELSE ISNULL(Device.HourlyRate,0) * Booking.TotalHours END, 2) " +
-                      "AS DECIMAL(10,2)) AS [Device Charge], " +
+                      "ELSE ISNULL(Device.HourlyRate,0) * Booking.TotalHours " +
+                      "END, 2) AS DECIMAL(10,2)) " +
+                      "AS [Device Charge], " +
 
-                      "CAST(ROUND(ISNULL(FoodTotals.FoodCharge, 0), 2) AS DECIMAL(10,2)) AS [Food Charge], " +
+                      "CAST(ROUND(ISNULL(FoodTotals.FoodCharge, 0), 2) " +
+                      "AS DECIMAL(10,2)) AS [Food Charge], " +
 
-                      "CAST(ROUND(Payment.PaymentAmount, 2) AS DECIMAL(10,2)) AS [Total Amount], " +
+                      "CAST(ROUND(Payment.PaymentAmount, 2) " +
+                      "AS DECIMAL(10,2)) AS [Total Amount], " +
 
                       "Payment.PaymentMethod AS [Payment Method], " +
                       "Payment.PaymentDate AS [Payment Date], " +
@@ -748,31 +776,70 @@ namespace GamingCafeAsset_InventorySystem
                       "ISNULL(Booking.Notes, '') AS [Notes] " +
 
                       "FROM Payment " +
-                      "JOIN Booking ON Payment.BookingID = Booking.BookingID " +
-                      "LEFT JOIN Device ON Booking.DeviceID = Device.DeviceID " +
+
+                      "INNER JOIN Booking " +
+                      "ON Payment.BookingID = Booking.BookingID " +
+
+                      "LEFT JOIN Device " +
+                      "ON Booking.DeviceID = Device.DeviceID " +
 
                       "LEFT JOIN ( " +
-                      "SELECT BookingID, SUM(Price * Quantity) AS FoodCharge " +
-                      "FROM FoodItem GROUP BY BookingID " +
-                      ") FoodTotals ON Booking.BookingID = FoodTotals.BookingID " +
+
+                      "SELECT " +
+                      "BookingID, " +
+                      "SUM(Price * Quantity) AS FoodCharge " +
+
+                      "FROM FoodItem " +
+
+                      "GROUP BY BookingID " +
+
+                      ") FoodTotals " +
+
+                      "ON Booking.BookingID = FoodTotals.BookingID " +
 
                       "WHERE " +
 
-                      "CAST(Payment.PaymentID AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "CAST(Booking.BookingID AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "Booking.CustomerName LIKE '%" + searchText + "%' OR " +
-                      "ISNULL(Device.DeviceName, '') LIKE '%" + searchText + "%' OR " +
-                      "CAST(Booking.TotalHours AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "CAST(ROUND(CASE " +
+                      "CAST(Payment.PaymentID AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(Booking.BookingID AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Booking.CustomerName, '') " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Device.DeviceName, '') " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(Booking.TotalHours AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(CASE " +
                       "WHEN Booking.BookingStatus = 'Cancelled' THEN 0 " +
-                      "ELSE ISNULL(Device.HourlyRate,0) * Booking.TotalHours END, 2) AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "CAST(ISNULL(FoodTotals.FoodCharge, 0) AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "CAST(Payment.PaymentAmount AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "Payment.PaymentMethod LIKE '%" + searchText + "%' OR " +
-                      "CAST(Payment.PaymentDate AS VARCHAR) LIKE '%" + searchText + "%' OR " +
-                      "Payment.PaymentStatus LIKE '%" + searchText + "%' OR " +
-                      "Booking.BookingStatus LIKE '%" + searchText + "%' OR " +
-                      "ISNULL(Booking.Notes, '') LIKE '%" + searchText + "%'";
+                      "ELSE ISNULL(Device.HourlyRate,0) * Booking.TotalHours " +
+                      "END AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(ISNULL(FoodTotals.FoodCharge, 0) AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(Payment.PaymentAmount AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Payment.PaymentMethod, '') " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "CAST(Payment.PaymentDate AS VARCHAR) " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Payment.PaymentStatus, '') " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Booking.BookingStatus, '') " +
+                      "LIKE '%" + searchText + "%' OR " +
+
+                      "ISNULL(Booking.Notes, '') " +
+                      "LIKE '%" + searchText + "%'";
 
                     break;
 
@@ -914,13 +981,13 @@ namespace GamingCafeAsset_InventorySystem
 
                     break;
 
-                //case "Payments":
+                case "Payments":
 
-                //    AddPaymentForm form = new AddPaymentForm(currentUser);
+                    AddPaymentForm form = new AddPaymentForm(currentUser);
 
-                //    form.ShowDialog();
+                    form.ShowDialog();
 
-                //    break;
+                    break;
 
                 case "Games":
 
@@ -1299,65 +1366,110 @@ namespace GamingCafeAsset_InventorySystem
 
                     break;
 
-                //case "Payments":
+                case "Payments":
 
-                //    if (dgvInfo.SelectedRows.Count == 0)
-                //    {
-                //        MessageBox.Show(
-                //          "Please select a payment first.",
-                //          "No Payment Selected",
-                //          MessageBoxButtons.OK,
-                //          MessageBoxIcon.Warning
-                //        );
-                //        return;
-                //    }
+                    // =====================================================
+                    // CHECK ROW SELECTION
+                    // =====================================================
 
-                //    row = dgvInfo.SelectedRows[0];
+                    if (dgvInfo.SelectedRows.Count == 0)
+                    {
+                        MessageBox.Show(
+                            "Please select a payment first.",
+                            "No Payment Selected",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
 
-                //    // =====================================================
-                //    // SAFE IDS
-                //    // =====================================================
-                //    if (!int.TryParse(row.Cells["Payment No."].Value?.ToString(), out int paymentID) ||
-                //      !int.TryParse(row.Cells["BookingID"].Value?.ToString(), out int bookingID) ||
-                //      !int.TryParse(row.Cells["DeviceID"].Value?.ToString(), out int deviceID))
-                //    {
-                //        MessageBox.Show("Invalid payment data selected.");
-                //        return;
-                //    }
+                        return;
+                    }
 
-                //    // =====================================================
-                //    // SAFE VALUES
-                //    // =====================================================
-                //    deviceName = row.Cells["Device"].Value?.ToString() ?? "";
-                //    customerName = row.Cells["Customer Name"].Value?.ToString() ?? "";
+                    // =====================================================
+                    // GET SELECTED ROW
+                    // =====================================================
 
-                //    decimal hours = Convert.ToDecimal(row.Cells["Total Hours"].Value ?? 0);
-                //    decimal totalAmount = Convert.ToDecimal(row.Cells["Total Amount"].Value ?? 0);
+                    row = dgvInfo.SelectedRows[0];
 
-                //    notes = row.Cells["Notes"].Value?.ToString() ?? "";
-                //    string paymentMethod = row.Cells["Payment Method"].Value?.ToString() ?? "";
-                //    string paymentStatus = row.Cells["Payment Status"].Value?.ToString() ?? "";
+                    // =====================================================
+                    // SAFE VALUE EXTRACTION
+                    // =====================================================
 
-                //    // =====================================================
-                //    // OPEN UPDATE FORM
-                //    // =====================================================
-                //    AddPaymentForm form = new AddPaymentForm(
-                //      currentUser,
-                //      paymentID,
-                //      bookingID,
-                //      deviceID,
-                //      deviceName,
-                //      customerName,
-                //      hours,
-                //      totalAmount,
-                //      notes,
-                //      paymentMethod,
-                //      paymentStatus
-                //    );
+                    if (!int.TryParse(
+                        row.Cells["Payment No."].Value?.ToString(),
+                        out int paymentID))
+                    {
+                        MessageBox.Show("Invalid payment selected.");
+                        return;
+                    }
 
-                //    form.ShowDialog();
+                    if (!int.TryParse(
+                        row.Cells["Booking No."].Value?.ToString(),
+                        out bookingID))
+                    {
+                        MessageBox.Show("Invalid booking selected.");
+                        return;
+                    }
 
-                //    break;
+                    customerName =
+                        row.Cells["Customer Name"].Value?.ToString() ?? "";
+
+                    deviceName =
+                        row.Cells["Device"].Value?.ToString() ?? "";
+
+                    totalHours =
+                        double.TryParse(
+                            row.Cells["Total Hours"].Value?.ToString(),
+                            out th) ? th : 0;
+
+                    double deviceCharge =
+                        double.TryParse(
+                            row.Cells["Device Charge"].Value?.ToString(),
+                            out double dc) ? dc : 0;
+
+                    double foodCharge =
+                        double.TryParse(
+                            row.Cells["Food Charge"].Value?.ToString(),
+                            out double fc) ? fc : 0;
+
+                    double totalAmount =
+                        double.TryParse(
+                            row.Cells["Total Amount"].Value?.ToString(),
+                            out double ta) ? ta : 0;
+
+                    string paymentMethod =
+                        row.Cells["Payment Method"].Value?.ToString() ?? "";
+
+                    string paymentStatus =
+                        row.Cells["Payment Status"].Value?.ToString() ?? "";
+
+                    DateTime paymentDate =
+                        DateTime.TryParse(
+                            row.Cells["Payment Date"].Value?.ToString(),
+                            out DateTime pd) ? pd : DateTime.Now;
+
+                    // =====================================================
+                    // OPEN UPDATE FORM
+                    // =====================================================
+
+                    AddPaymentForm updatePaymentForm =
+                        new AddPaymentForm(
+                            currentUser,
+                            paymentID,
+                            bookingID,
+                            customerName,
+                            deviceName,
+                            totalHours,
+                            deviceCharge,
+                            foodCharge,
+                            totalAmount,
+                            paymentMethod,
+                            paymentStatus,
+                            paymentDate
+                        );
+
+                    updatePaymentForm.ShowDialog();
+
+                    break;
 
                 default:
 
