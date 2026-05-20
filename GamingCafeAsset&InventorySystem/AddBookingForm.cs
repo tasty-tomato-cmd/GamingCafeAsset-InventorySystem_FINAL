@@ -193,10 +193,10 @@ namespace GamingCafeAsset_InventorySystem
             if (!PhoneEmailValidation.IsValidPhone(phone))
             {
                 MessageBox.Show(
-                    "Phone number must be exactly 11 digits!",
-                    "Invalid Phone Number",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                  "Phone number must be exactly 11 digits!",
+                  "Invalid Phone Number",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
                 );
 
                 return;
@@ -214,12 +214,10 @@ namespace GamingCafeAsset_InventorySystem
             {
                 status = "Active";
             }
-
             else if (rbCompleted.Checked)
             {
                 status = "Completed";
             }
-
             else if (rbCancel.Checked)
             {
                 status = "Cancelled";
@@ -287,34 +285,33 @@ namespace GamingCafeAsset_InventorySystem
                     this.Close();
                 }
             }
-
             else
             {
                 string statusQuery =
-                    "SELECT BookingStatus " +
-                    "FROM Booking " +
-                    "WHERE BookingID = " + bookingId;
+                  "SELECT BookingStatus " +
+                  "FROM Booking " +
+                  "WHERE BookingID = " + bookingId;
 
                 ResultSet statusResult =
-                    db.GetQueryData(statusQuery);
+                  db.GetQueryData(statusQuery);
 
                 string currentStatus = "";
 
                 if (!statusResult.HasError &&
-                    statusResult.Data != null &&
-                    statusResult.Data.Rows.Count > 0)
+                  statusResult.Data != null &&
+                  statusResult.Data.Rows.Count > 0)
                 {
                     currentStatus =
-                        statusResult.Data.Rows[0]["BookingStatus"].ToString();
+                      statusResult.Data.Rows[0]["BookingStatus"].ToString();
                 }
 
                 if (currentStatus == "Completed" || currentStatus == "Cancelled")
                 {
                     MessageBox.Show(
-                        "Completed or cancelled bookings cannot be changed.",
-                        "Invalid Status Change",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
+                      "Completed or cancelled bookings cannot be changed.",
+                      "Invalid Status Change",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Warning
                     );
 
                     return;

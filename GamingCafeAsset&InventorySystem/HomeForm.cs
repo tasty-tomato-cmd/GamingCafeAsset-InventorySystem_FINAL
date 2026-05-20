@@ -19,7 +19,6 @@ namespace GamingCafeAsset_InventorySystem
 
         private string currentModule = string.Empty;
 
-
         public HomeForm(LoggedInUser user)
         {
             InitializeComponent();
@@ -46,14 +45,12 @@ namespace GamingCafeAsset_InventorySystem
             {
 
             }
-
             else if (currentUser.UserTypeName == "Manager")
             {
                 HideButtonRow(btnUsers);
 
                 btnDelete.Enabled = false;
             }
-
             else if (currentUser.UserTypeName == "Staff")
             {
                 HideButtonRow(btnUsers);
@@ -68,16 +65,15 @@ namespace GamingCafeAsset_InventorySystem
         private void HideButtonRow(Button button)
         {
             int row =
-                tblpnlBtns.GetRow(button);
+              tblpnlBtns.GetRow(button);
 
             button.Visible = false;
 
             tblpnlBtns.RowStyles[row].Height = 0;
 
             tblpnlBtns.RowStyles[row].SizeType =
-                SizeType.Absolute;
+              SizeType.Absolute;
         }
-
 
         private void DisableSorting()
         {
@@ -103,7 +99,6 @@ namespace GamingCafeAsset_InventorySystem
 
             DisableSorting();
         }
-
 
         private void LoadCurrentModule()
         {
@@ -327,7 +322,6 @@ namespace GamingCafeAsset_InventorySystem
             );
         }
 
-
         private void LoadDashboard()
         {
             currentModule = "Dashboard";
@@ -339,72 +333,68 @@ namespace GamingCafeAsset_InventorySystem
             ResetButtonColors();
 
             btnDashboard.BackColor =
-                Color.FromArgb(75, 100, 145);
+              Color.FromArgb(75, 100, 145);
 
             LoadData(
 
-                "SELECT " +
+              "SELECT " +
 
-                "Device.DeviceName AS [Device], " +
+              "Device.DeviceName AS [Device], " +
 
-                "CASE " +
-                "WHEN Device.Status = 'Available' THEN 'No Current Customer' " +
-                "ELSE ISNULL(B.CustomerName, 'Unknown') " +
-                "END AS [Current Customer], " +
+              "CASE " +
+              "WHEN Device.Status = 'Available' THEN 'No Current Customer' " +
+              "ELSE ISNULL(B.CustomerName, 'Unknown') " +
+              "END AS [Current Customer], " +
 
-                "Device.Status AS [Status], " +
+              "Device.Status AS [Status], " +
 
-                "CASE " +
-                "WHEN B.BookingStatus = 'Active' " +
-                "THEN CONVERT(VARCHAR, B.EndTime, 100) " +
-                "ELSE 'N/A' " +
-                "END AS [Session Ends], " +
+              "CASE " +
+              "WHEN B.BookingStatus = 'Active' " +
+              "THEN CONVERT(VARCHAR, B.EndTime, 100) " +
+              "ELSE 'N/A' " +
+              "END AS [Session Ends], " +
 
-                "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) " +
-                "AS [Hourly Rate], " +
+              "CAST(ROUND(Device.HourlyRate, 2) AS DECIMAL(10,2)) " +
+              "AS [Hourly Rate], " +
 
+              "ISNULL(GameList.Games, 'No Game Assigned') " +
+              "AS [Current Games] " +
 
-                "ISNULL(GameList.Games, 'No Game Assigned') " +
-                "AS [Current Games] " +
+              "FROM Device " +
 
-                "FROM Device " +
+              "OUTER APPLY ( " +
+              "SELECT TOP 1 * FROM Booking " +
+              "WHERE Booking.DeviceID = Device.DeviceID " +
+              "ORDER BY " +
+              "CASE " +
+              "WHEN Booking.BookingStatus = 'Active' THEN 1 " +
+              "ELSE 2 " +
+              "END, " +
+              "Booking.BookingID DESC " +
+              ") B " +
 
+              "OUTER APPLY ( " +
+              "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
+              "FROM DeviceGames " +
+              "INNER JOIN Games " +
+              "ON DeviceGames.GameID = Games.GameID " +
+              "WHERE DeviceGames.DeviceID = Device.DeviceID " +
+              ") GameList " +
 
-                "OUTER APPLY ( " +
-                "SELECT TOP 1 * FROM Booking " +
-                "WHERE Booking.DeviceID = Device.DeviceID " +
-                "ORDER BY " +
-                "CASE " +
-                "WHEN Booking.BookingStatus = 'Active' THEN 1 " +
-                "ELSE 2 " +
-                "END, " +
-                "Booking.BookingID DESC " +
-                ") B " +
+              "WHERE Device.Status IN " +
+              "('Available', 'Occupied', 'Reserved') " +
 
+              "ORDER BY " +
 
-                "OUTER APPLY ( " +
-                "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
-                "FROM DeviceGames " +
-                "INNER JOIN Games " +
-                "ON DeviceGames.GameID = Games.GameID " +
-                "WHERE DeviceGames.DeviceID = Device.DeviceID " +
-                ") GameList " +
+              "CASE " +
+              "WHEN Device.Status = 'Occupied' THEN 1 " +
+              "WHEN Device.Status = 'Reserved' THEN 2 " +
+              "ELSE 3 " +
+              "END, " +
 
-                "WHERE Device.Status IN " +
-                "('Available', 'Occupied', 'Reserved') " +
-
-                "ORDER BY " +
-
-                "CASE " +
-                "WHEN Device.Status = 'Occupied' THEN 1 " +
-                "WHEN Device.Status = 'Reserved' THEN 2 " +
-                "ELSE 3 " +
-                "END, " +
-
-                "Device.DeviceName"
+              "Device.DeviceName"
             );
         }
-
 
         private void ResetButtonColors()
         {
@@ -422,7 +412,6 @@ namespace GamingCafeAsset_InventorySystem
 
             btnGames.BackColor = Color.FromArgb(220, 60, 90);
         }
-
 
         private void ModuleButton_Click(object sender, EventArgs e)
         {
@@ -444,7 +433,6 @@ namespace GamingCafeAsset_InventorySystem
                 {
                     btnDelete.Enabled = true;
                 }
-
                 else
                 {
                     btnDelete.Enabled = false;
@@ -496,7 +484,6 @@ namespace GamingCafeAsset_InventorySystem
             LoadCurrentModule();
         }
 
-
         private void txtSearch_Enter(object sender, EventArgs e)
         {
             if (txtSearch.Text.StartsWith("Search"))
@@ -519,7 +506,6 @@ namespace GamingCafeAsset_InventorySystem
                 }
             }
         }
-
 
         private void SearchModuleData()
         {
@@ -562,7 +548,6 @@ namespace GamingCafeAsset_InventorySystem
 
                       "FROM Device " +
 
-
                       "OUTER APPLY ( " +
                       "SELECT TOP 1 * FROM Booking " +
                       "WHERE Booking.DeviceID = Device.DeviceID " +
@@ -574,7 +559,6 @@ namespace GamingCafeAsset_InventorySystem
                       "Booking.BookingID DESC " +
                       ") B " +
 
-
                       "OUTER APPLY ( " +
                       "SELECT STRING_AGG(Games.GameName, ', ') AS Games " +
                       "FROM DeviceGames " +
@@ -582,7 +566,6 @@ namespace GamingCafeAsset_InventorySystem
                       "ON DeviceGames.GameID = Games.GameID " +
                       "WHERE DeviceGames.DeviceID = Device.DeviceID " +
                       ") GameList " +
-
 
                       "WHERE " +
 
@@ -598,7 +581,6 @@ namespace GamingCafeAsset_InventorySystem
 
                       "ISNULL(B.BookingStatus, '') LIKE '%" + searchText + "%' " +
 
-
                       "ORDER BY " +
 
                       "CASE " +
@@ -610,7 +592,6 @@ namespace GamingCafeAsset_InventorySystem
                       "Device.DeviceName";
 
                     break;
-
 
                 case "Users":
 
@@ -1032,7 +1013,6 @@ namespace GamingCafeAsset_InventorySystem
                     break;
             }
 
-
             LoadCurrentModule();
         }
 
@@ -1042,7 +1022,6 @@ namespace GamingCafeAsset_InventorySystem
             switch (currentModule)
             {
                 case "Users":
-
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
@@ -1163,7 +1142,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Devices":
 
-
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
@@ -1260,22 +1238,19 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Food Items":
 
-
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
-                            "Please select a food item first.",
-                            "No Food Item Selected",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Please select a food item first.",
+                          "No Food Item Selected",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
                     }
 
-
                     row = dgvInfo.SelectedRows[0];
-
 
                     if (!int.TryParse(
                         row.Cells["Food No."].Value?.ToString(),
@@ -1294,44 +1269,41 @@ namespace GamingCafeAsset_InventorySystem
                     }
 
                     string foodName =
-                        row.Cells["Food Name"].Value?.ToString() ?? "";
+                      row.Cells["Food Name"].Value?.ToString() ?? "";
 
                     double price =
-                        double.TryParse(
-                            row.Cells["Unit Price"].Value?.ToString(),
-                            out double p) ? p : 0;
+                      double.TryParse(
+                        row.Cells["Unit Price"].Value?.ToString(),
+                        out double p) ? p : 0;
 
                     int quantity =
-                        int.TryParse(
-                            row.Cells["Quantity"].Value?.ToString(),
-                            out int q) ? q : 1;
-
+                      int.TryParse(
+                        row.Cells["Quantity"].Value?.ToString(),
+                        out int q) ? q : 1;
 
                     AddFoodItemForm updateFoodItemForm =
-                        new AddFoodItemForm(
-                            currentUser,
-                            foodID,
-                            bookingID,
-                            foodName,
-                            price,
-                            quantity
-                        );
+                      new AddFoodItemForm(
+                        currentUser,
+                        foodID,
+                        bookingID,
+                        foodName,
+                        price,
+                        quantity
+                      );
 
                     updateFoodItemForm.ShowDialog();
 
                     break;
 
-                
-                
                 case "Payments":
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
-                            "Please select a payment first.",
-                            "No Payment Selected",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Please select a payment first.",
+                          "No Payment Selected",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
@@ -1356,57 +1328,57 @@ namespace GamingCafeAsset_InventorySystem
                     }
 
                     customerName =
-                        row.Cells["Customer Name"].Value?.ToString() ?? "";
+                      row.Cells["Customer Name"].Value?.ToString() ?? "";
 
                     deviceName =
-                        row.Cells["Device"].Value?.ToString() ?? "";
+                      row.Cells["Device"].Value?.ToString() ?? "";
 
                     totalHours =
-                        double.TryParse(
-                            row.Cells["Total Hours"].Value?.ToString(),
-                            out th) ? th : 0;
+                      double.TryParse(
+                        row.Cells["Total Hours"].Value?.ToString(),
+                        out th) ? th : 0;
 
                     double deviceCharge =
-                        double.TryParse(
-                            row.Cells["Device Charge"].Value?.ToString(),
-                            out double dc) ? dc : 0;
+                      double.TryParse(
+                        row.Cells["Device Charge"].Value?.ToString(),
+                        out double dc) ? dc : 0;
 
                     double foodCharge =
-                        double.TryParse(
-                            row.Cells["Food Charge"].Value?.ToString(),
-                            out double fc) ? fc : 0;
+                      double.TryParse(
+                        row.Cells["Food Charge"].Value?.ToString(),
+                        out double fc) ? fc : 0;
 
                     double totalAmount =
-                        double.TryParse(
-                            row.Cells["Total Amount"].Value?.ToString(),
-                            out double ta) ? ta : 0;
+                      double.TryParse(
+                        row.Cells["Total Amount"].Value?.ToString(),
+                        out double ta) ? ta : 0;
 
                     string paymentMethod =
-                        row.Cells["Payment Method"].Value?.ToString() ?? "";
+                      row.Cells["Payment Method"].Value?.ToString() ?? "";
 
                     string paymentStatus =
-                        row.Cells["Payment Status"].Value?.ToString() ?? "";
+                      row.Cells["Payment Status"].Value?.ToString() ?? "";
 
                     DateTime paymentDate =
-                        DateTime.TryParse(
-                            row.Cells["Payment Date"].Value?.ToString(),
-                            out DateTime pd) ? pd : DateTime.Now;
+                      DateTime.TryParse(
+                        row.Cells["Payment Date"].Value?.ToString(),
+                        out DateTime pd) ? pd : DateTime.Now;
 
                     AddPaymentForm updatePaymentForm =
-                        new AddPaymentForm(
-                            currentUser,
-                            paymentID,
-                            bookingID,
-                            customerName,
-                            deviceName,
-                            totalHours,
-                            deviceCharge,
-                            foodCharge,
-                            totalAmount,
-                            paymentMethod,
-                            paymentStatus,
-                            paymentDate
-                        );
+                      new AddPaymentForm(
+                        currentUser,
+                        paymentID,
+                        bookingID,
+                        customerName,
+                        deviceName,
+                        totalHours,
+                        deviceCharge,
+                        foodCharge,
+                        totalAmount,
+                        paymentMethod,
+                        paymentStatus,
+                        paymentDate
+                      );
 
                     updatePaymentForm.ShowDialog();
 
@@ -1446,7 +1418,6 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-
                     DataGridViewRow row = dgvInfo.SelectedRows[0];
 
                     if (!int.TryParse(
@@ -1457,22 +1428,21 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-
                     string userType =
-                        row.Cells["Role"].Value?.ToString() ?? "";
+                      row.Cells["Role"].Value?.ToString() ?? "";
 
                     string username =
-                        row.Cells["Username"].Value?.ToString() ?? "";
+                      row.Cells["Username"].Value?.ToString() ?? "";
 
                     if (userType.Equals(
                         "Admin",
                         StringComparison.OrdinalIgnoreCase))
                     {
                         MessageBox.Show(
-                            "Admin accounts cannot be deleted.",
-                            "Delete Blocked",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Admin accounts cannot be deleted.",
+                          "Delete Blocked",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
@@ -1492,10 +1462,10 @@ namespace GamingCafeAsset_InventorySystem
                     }
 
                     DataDeletionHelper deletionHelper =
-                        new DataDeletionHelper();
+                      new DataDeletionHelper();
 
                     ResultSet result =
-                        deletionHelper.DeleteUser(userId);
+                      deletionHelper.DeleteUser(userId);
 
                     if (result.HasError)
                     {
@@ -1506,7 +1476,6 @@ namespace GamingCafeAsset_InventorySystem
                           MessageBoxIcon.Error
                         );
                     }
-
                     else
                     {
                         MessageBox.Show(
@@ -1519,81 +1488,80 @@ namespace GamingCafeAsset_InventorySystem
 
                     break;
 
-
                 case "Bookings":
 
                     int bookingID =
-                        Convert.ToInt32(
-                            dgvInfo.CurrentRow.Cells["Booking No."].Value
-                        );
+                      Convert.ToInt32(
+                        dgvInfo.CurrentRow.Cells["Booking No."].Value
+                      );
 
                     DBAccessHelper db =
-                        new DBAccessHelper();
+                      new DBAccessHelper();
 
                     int deviceID = 0;
 
                     ResultSet deviceResult =
-                        db.GetQueryData(
+                      db.GetQueryData(
 
                         "SELECT DeviceID " +
 
                         "FROM Booking " +
 
                         "WHERE BookingID=" + bookingID
-                    );
+                      );
 
                     if (!deviceResult.HasError &&
-                        deviceResult.Data != null &&
-                        deviceResult.Data.Rows.Count > 0)
+                      deviceResult.Data != null &&
+                      deviceResult.Data.Rows.Count > 0)
                     {
                         deviceID =
-                            Convert.ToInt32(
-                                deviceResult.Data.Rows[0]["DeviceID"]
-                            );
+                          Convert.ToInt32(
+                            deviceResult.Data.Rows[0]["DeviceID"]
+                          );
                     }
 
                     db.ExecuteNonQuery(
 
-                        "DELETE FROM FoodItemCategory " +
+                      "DELETE FROM FoodItemCategory " +
 
-                        "WHERE FoodID IN (" +
+                      "WHERE FoodID IN (" +
 
-                        "SELECT FoodID FROM FoodItem " +
+                      "SELECT FoodID FROM FoodItem " +
 
-                        "WHERE BookingID=" + bookingID +
+                      "WHERE BookingID=" + bookingID +
 
-                        ")"
+                      ")"
                     );
 
                     db.ExecuteNonQuery(
 
-                        "DELETE FROM FoodItem " +
+                      "DELETE FROM FoodItem " +
 
-                        "WHERE BookingID=" + bookingID
+                      "WHERE BookingID=" + bookingID
                     );
 
                     db.ExecuteNonQuery(
 
-                        "DELETE FROM Payment " +
+                      "DELETE FROM Payment " +
 
-                        "WHERE BookingID=" + bookingID
+                      "WHERE BookingID=" + bookingID
                     );
 
                     result =
-                        db.ExecuteNonQuery(
+                      db.ExecuteNonQuery(
 
                         "DELETE FROM Booking " +
 
                         "WHERE BookingID=" + bookingID
-                    );
+                      );
 
                     if (result.HasError)
                     {
                         MessageBox.Show(
-                            result.Message,
-                            "Delete Failed",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error
+                          result.Message,
+                          "Delete Failed",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error
                         );
 
                         return;
@@ -1602,14 +1570,14 @@ namespace GamingCafeAsset_InventorySystem
                     if (deviceID > 0)
                     {
                         new DataDeletionHelper()
-                            .SetDeviceStatus(deviceID, "Available");
+                          .SetDeviceStatus(deviceID, "Available");
                     }
 
                     MessageBox.Show(
-                        "Booking deleted successfully!",
-                        "Success",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
+                      "Booking deleted successfully!",
+                      "Success",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Information
                     );
 
                     LoadBookingsData();
@@ -1712,10 +1680,10 @@ namespace GamingCafeAsset_InventorySystem
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
                         MessageBox.Show(
-                            "Please select a food item first.",
-                            "No Food Item Selected",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Please select a food item first.",
+                          "No Food Item Selected",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
@@ -1732,16 +1700,16 @@ namespace GamingCafeAsset_InventorySystem
                     }
 
                     string foodName =
-                        row.Cells["Food Name"].Value?.ToString() ?? "";
+                      row.Cells["Food Name"].Value?.ToString() ?? "";
 
                     confirm =
-                        MessageBox.Show(
-                            "Are you sure you want to delete this food item?\n\n" +
-                            "Food: " + foodName,
-                            "Confirm Delete",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Warning
-                        );
+                      MessageBox.Show(
+                        "Are you sure you want to delete this food item?\n\n" +
+                        "Food: " + foodName,
+                        "Confirm Delete",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                      );
 
                     if (confirm == DialogResult.No)
                     {
@@ -1751,46 +1719,45 @@ namespace GamingCafeAsset_InventorySystem
                     db = new DBAccessHelper();
 
                     result =
-                        db.ExecuteNonQuery(
-                            "DELETE FROM FoodItemCategory " +
-                            "WHERE FoodID = " + foodID
-                        );
+                      db.ExecuteNonQuery(
+                        "DELETE FROM FoodItemCategory " +
+                        "WHERE FoodID = " + foodID
+                      );
 
                     if (result.HasError)
                     {
                         MessageBox.Show(
-                            result.Message,
-                            "Delete Failed",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error
+                          result.Message,
+                          "Delete Failed",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error
                         );
 
                         return;
                     }
 
                     result =
-                        db.ExecuteNonQuery(
-                            "DELETE FROM FoodItem " +
-                            "WHERE FoodID = " + foodID
-                        );
+                      db.ExecuteNonQuery(
+                        "DELETE FROM FoodItem " +
+                        "WHERE FoodID = " + foodID
+                      );
 
                     if (result.HasError)
                     {
                         MessageBox.Show(
-                            result.Message,
-                            "Delete Failed",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error
+                          result.Message,
+                          "Delete Failed",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error
                         );
                     }
-
                     else
                     {
                         MessageBox.Show(
-                            "Food item deleted successfully.",
-                            "Success",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
+                          "Food item deleted successfully.",
+                          "Success",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Information
                         );
                     }
 
@@ -1799,65 +1766,65 @@ namespace GamingCafeAsset_InventorySystem
                 case "Payments":
 
                     int paymentID =
-                        Convert.ToInt32(
-                            dgvInfo.CurrentRow.Cells["Payment No."].Value
-                        );
+                      Convert.ToInt32(
+                        dgvInfo.CurrentRow.Cells["Payment No."].Value
+                      );
 
                     bookingID =
-                        Convert.ToInt32(
-                            dgvInfo.CurrentRow.Cells["Booking No."].Value
-                        );
+                      Convert.ToInt32(
+                        dgvInfo.CurrentRow.Cells["Booking No."].Value
+                      );
 
                     confirm =
-                        MessageBox.Show(
-                            "Are you sure you want to delete this payment?",
-                            "Confirm Delete",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Warning
-                        );
+                      MessageBox.Show(
+                        "Are you sure you want to delete this payment?",
+                        "Confirm Delete",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                      );
 
                     if (confirm == DialogResult.Yes)
                     {
                         db =
-                            new DBAccessHelper();
+                          new DBAccessHelper();
 
                         deviceID = 0;
 
                         deviceResult =
-                            db.GetQueryData(
+                          db.GetQueryData(
 
                             "SELECT DeviceID " +
 
                             "FROM Booking " +
 
                             "WHERE BookingID=" + bookingID
-                        );
+                          );
 
                         if (!deviceResult.HasError &&
-                            deviceResult.Data != null &&
-                            deviceResult.Data.Rows.Count > 0)
+                          deviceResult.Data != null &&
+                          deviceResult.Data.Rows.Count > 0)
                         {
                             deviceID =
-                                Convert.ToInt32(
-                                    deviceResult.Data.Rows[0]["DeviceID"]
-                                );
+                              Convert.ToInt32(
+                                deviceResult.Data.Rows[0]["DeviceID"]
+                              );
                         }
 
                         result =
-                            db.ExecuteNonQuery(
+                          db.ExecuteNonQuery(
 
                             "DELETE FROM Payment " +
 
                             "WHERE PaymentID=" + paymentID
-                        );
+                          );
 
                         if (result.HasError)
                         {
                             MessageBox.Show(
-                                result.Message,
-                                "Delete Failed",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error
+                              result.Message,
+                              "Delete Failed",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Error
                             );
 
                             return;
@@ -1865,24 +1832,24 @@ namespace GamingCafeAsset_InventorySystem
 
                         db.ExecuteNonQuery(
 
-                            "UPDATE Booking SET " +
+                          "UPDATE Booking SET " +
 
-                            "BookingStatus='Active' " +
+                          "BookingStatus='Active' " +
 
-                            "WHERE BookingID=" + bookingID
+                          "WHERE BookingID=" + bookingID
                         );
 
                         if (deviceID > 0)
                         {
                             new DataDeletionHelper()
-                                .SetDeviceStatus(deviceID, "Occupied");
+                              .SetDeviceStatus(deviceID, "Occupied");
                         }
 
                         MessageBox.Show(
-                            "Payment deleted successfully!",
-                            "Success",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
+                          "Payment deleted successfully!",
+                          "Success",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Information
                         );
 
                         LoadPaymentsData();

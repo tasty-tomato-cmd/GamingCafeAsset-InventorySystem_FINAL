@@ -14,7 +14,7 @@ namespace GamingCafeAsset_InventorySystem
         private int paymentID;
 
         public AddPaymentForm(
-            LoggedInUser user)
+          LoggedInUser user)
         {
             InitializeComponent();
 
@@ -31,18 +31,18 @@ namespace GamingCafeAsset_InventorySystem
         }
 
         public AddPaymentForm(
-            LoggedInUser user,
-            int paymentID,
-            int bookingID,
-            string customerName,
-            string deviceName,
-            double totalHours,
-            double deviceCharge,
-            double foodCharge,
-            double totalAmount,
-            string paymentMethod,
-            string paymentStatus,
-            DateTime paymentDate)
+          LoggedInUser user,
+          int paymentID,
+          int bookingID,
+          string customerName,
+          string deviceName,
+          double totalHours,
+          double deviceCharge,
+          double foodCharge,
+          double totalAmount,
+          string paymentMethod,
+          string paymentStatus,
+          DateTime paymentDate)
         {
             InitializeComponent();
 
@@ -64,42 +64,40 @@ namespace GamingCafeAsset_InventorySystem
             cbBookingRef.Enabled = false;
 
             txtBookingRef.Text =
-                bookingID.ToString();
+              bookingID.ToString();
 
             txtCustomer.Text =
-                customerName;
+              customerName;
 
             txtDeviceName.Text =
-                deviceName;
+              deviceName;
 
             txtHours.Text =
-                totalHours.ToString("0.00");
+              totalHours.ToString("0.00");
 
             txtCharge.Text =
-                deviceCharge.ToString("0.00");
+              deviceCharge.ToString("0.00");
 
             txtFood.Text =
-                foodCharge.ToString("0.00");
+              foodCharge.ToString("0.00");
 
             txtTotal.Text =
-                totalAmount.ToString("0.00");
+              totalAmount.ToString("0.00");
 
             cbPaymentMethods.Text =
-                paymentMethod;
+              paymentMethod;
 
             dtpDop.Value =
-                paymentDate;
+              paymentDate;
 
             if (paymentStatus == "Paid")
             {
                 rbtnPaid.Checked = true;
             }
-
             else if (paymentStatus == "Pending")
             {
                 rbtnPending.Checked = true;
             }
-
             else if (paymentStatus == "Refunded")
             {
                 rbtnRefund.Checked = true;
@@ -109,74 +107,73 @@ namespace GamingCafeAsset_InventorySystem
         private void PaymentEvents()
         {
             cbBookingRef.SelectedIndexChanged +=
-                cbBookingRef_SelectedIndexChanged;
+              cbBookingRef_SelectedIndexChanged;
         }
 
         private void LoadActiveBookings()
         {
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             string query = "";
 
             if (!isUpdateMode)
             {
                 query =
-                    "SELECT " +
+                  "SELECT " +
 
-                    "Booking.BookingID, " +
+                  "Booking.BookingID, " +
 
-                    "CAST(Booking.BookingID AS VARCHAR) + " +
-                    "' - ' + " +
-                    "Booking.CustomerName + " +
-                    "' - ' + " +
-                    "Device.DeviceName " +
+                  "CAST(Booking.BookingID AS VARCHAR) + " +
+                  "' - ' + " +
+                  "Booking.CustomerName + " +
+                  "' - ' + " +
+                  "Device.DeviceName " +
 
-                    "AS BookingInfo " +
+                  "AS BookingInfo " +
 
-                    "FROM Booking " +
+                  "FROM Booking " +
 
-                    "INNER JOIN Device " +
-                    "ON Booking.DeviceID = Device.DeviceID " +
+                  "INNER JOIN Device " +
+                  "ON Booking.DeviceID = Device.DeviceID " +
 
-                    "WHERE Booking.BookingStatus='Active'";
+                  "WHERE Booking.BookingStatus='Active'";
             }
-
             else
             {
                 query =
-                    "SELECT " +
+                  "SELECT " +
 
-                    "Booking.BookingID, " +
+                  "Booking.BookingID, " +
 
-                    "CAST(Booking.BookingID AS VARCHAR) + " +
-                    "' - ' + " +
-                    "Booking.CustomerName + " +
-                    "' - ' + " +
-                    "Device.DeviceName " +
+                  "CAST(Booking.BookingID AS VARCHAR) + " +
+                  "' - ' + " +
+                  "Booking.CustomerName + " +
+                  "' - ' + " +
+                  "Device.DeviceName " +
 
-                    "AS BookingInfo " +
+                  "AS BookingInfo " +
 
-                    "FROM Booking " +
+                  "FROM Booking " +
 
-                    "INNER JOIN Device " +
-                    "ON Booking.DeviceID = Device.DeviceID";
+                  "INNER JOIN Device " +
+                  "ON Booking.DeviceID = Device.DeviceID";
             }
 
             ResultSet result =
-                db.GetQueryData(query);
+              db.GetQueryData(query);
 
             if (!result.HasError &&
-                result.Data != null)
+              result.Data != null)
             {
                 cbBookingRef.DataSource =
-                    result.Data;
+                  result.Data;
 
                 cbBookingRef.DisplayMember =
-                    "BookingInfo";
+                  "BookingInfo";
 
                 cbBookingRef.ValueMember =
-                    "BookingID";
+                  "BookingID";
 
                 cbBookingRef.SelectedIndex = -1;
             }
@@ -196,8 +193,8 @@ namespace GamingCafeAsset_InventorySystem
         }
 
         private void cbBookingRef_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             if (cbBookingRef.SelectedValue == null)
             {
@@ -212,125 +209,125 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             LoadBookingDetails(
-                bookingID
+              bookingID
             );
         }
 
         private void LoadBookingDetails(
-            int bookingID)
+          int bookingID)
         {
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             string query =
-                "SELECT " +
+              "SELECT " +
 
-                "Booking.BookingID, " +
-                "Booking.CustomerName, " +
-                "Booking.TotalHours, " +
+              "Booking.BookingID, " +
+              "Booking.CustomerName, " +
+              "Booking.TotalHours, " +
 
-                "Device.DeviceName, " +
-                "Device.HourlyRate " +
+              "Device.DeviceName, " +
+              "Device.HourlyRate " +
 
-                "FROM Booking " +
+              "FROM Booking " +
 
-                "INNER JOIN Device " +
-                "ON Booking.DeviceID = Device.DeviceID " +
+              "INNER JOIN Device " +
+              "ON Booking.DeviceID = Device.DeviceID " +
 
-                "WHERE Booking.BookingID=" +
-                bookingID;
+              "WHERE Booking.BookingID=" +
+              bookingID;
 
             ResultSet result =
-                db.GetQueryData(query);
+              db.GetQueryData(query);
 
             if (result.HasError ||
-                result.Data == null ||
-                result.Data.Rows.Count == 0)
+              result.Data == null ||
+              result.Data.Rows.Count == 0)
             {
                 return;
             }
 
             DataRow row =
-                result.Data.Rows[0];
+              result.Data.Rows[0];
 
             string customerName =
-                row["CustomerName"].ToString();
+              row["CustomerName"].ToString();
 
             string deviceName =
-                row["DeviceName"].ToString();
+              row["DeviceName"].ToString();
 
             double totalHours =
-                Convert.ToDouble(
-                    row["TotalHours"]
-                );
+              Convert.ToDouble(
+                row["TotalHours"]
+              );
 
             double hourlyRate =
-                Convert.ToDouble(
-                    row["HourlyRate"]
-                );
+              Convert.ToDouble(
+                row["HourlyRate"]
+              );
 
             double deviceCharge =
-                totalHours * hourlyRate;
+              totalHours * hourlyRate;
 
             double foodCharge = 0;
 
             string foodQuery =
-                "SELECT " +
-                "ISNULL(SUM(Price * Quantity), 0) " +
-                "AS FoodCharge " +
+              "SELECT " +
+              "ISNULL(SUM(Price * Quantity), 0) " +
+              "AS FoodCharge " +
 
-                "FROM FoodItem " +
+              "FROM FoodItem " +
 
-                "WHERE BookingID=" +
-                bookingID;
+              "WHERE BookingID=" +
+              bookingID;
 
             ResultSet foodResult =
-                db.GetQueryData(foodQuery);
+              db.GetQueryData(foodQuery);
 
             if (!foodResult.HasError &&
-                foodResult.Data != null &&
-                foodResult.Data.Rows.Count > 0)
+              foodResult.Data != null &&
+              foodResult.Data.Rows.Count > 0)
             {
                 foodCharge =
-                    Convert.ToDouble(
-                        foodResult.Data.Rows[0]["FoodCharge"]
-                    );
+                  Convert.ToDouble(
+                    foodResult.Data.Rows[0]["FoodCharge"]
+                  );
             }
 
             double totalAmount =
-                deviceCharge + foodCharge;
+              deviceCharge + foodCharge;
 
             txtBookingRef.Text =
-                bookingID.ToString();
+              bookingID.ToString();
 
             txtCustomer.Text =
-                customerName;
+              customerName;
 
             txtDeviceName.Text =
-                deviceName;
+              deviceName;
 
             txtHours.Text =
-                totalHours.ToString("0.00");
+              totalHours.ToString("0.00");
 
             txtCharge.Text =
-                deviceCharge.ToString("0.00");
+              deviceCharge.ToString("0.00");
 
             txtFood.Text =
-                foodCharge.ToString("0.00");
+              foodCharge.ToString("0.00");
 
             txtTotal.Text =
-                totalAmount.ToString("0.00");
+              totalAmount.ToString("0.00");
         }
 
         private void btnCreate_Click(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
 
             if (cbBookingRef.SelectedValue == null)
             {
                 MessageBox.Show(
-                    "Please select a booking."
+                  "Please select a booking."
                 );
 
                 return;
@@ -339,7 +336,7 @@ namespace GamingCafeAsset_InventorySystem
             if (cbPaymentMethods.SelectedItem == null)
             {
                 MessageBox.Show(
-                    "Please select a payment method."
+                  "Please select a payment method."
                 );
 
                 return;
@@ -351,164 +348,160 @@ namespace GamingCafeAsset_InventorySystem
             {
                 paymentStatus = "Paid";
             }
-
             else if (rbtnPending.Checked)
             {
                 paymentStatus = "Pending";
             }
-
             else if (rbtnRefund.Checked)
             {
                 paymentStatus = "Refunded";
             }
-
             else
             {
                 MessageBox.Show(
-                    "Please select payment status."
+                  "Please select payment status."
                 );
 
                 return;
             }
 
             int bookingID =
-                Convert.ToInt32(
-                    cbBookingRef.SelectedValue
-                );
+              Convert.ToInt32(
+                cbBookingRef.SelectedValue
+              );
 
             double totalAmount =
-                Convert.ToDouble(
-                    txtTotal.Text
-                );
+              Convert.ToDouble(
+                txtTotal.Text
+              );
 
             string paymentMethod =
-                cbPaymentMethods.Text;
+              cbPaymentMethods.Text;
 
             string paymentDate =
-                dtpDop.Value.ToString("yyyy-MM-dd");
+              dtpDop.Value.ToString("yyyy-MM-dd");
 
             string createdAt =
-                DateTime.Now.ToString(
-                    "yyyy-MM-dd HH:mm:ss"
-                );
+              DateTime.Now.ToString(
+                "yyyy-MM-dd HH:mm:ss"
+              );
 
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             int deviceID = 0;
 
             ResultSet deviceResult =
-                db.GetQueryData(
+              db.GetQueryData(
 
                 "SELECT DeviceID " +
                 "FROM Booking " +
                 "WHERE BookingID=" +
                 bookingID
-            );
+              );
 
             if (!deviceResult.HasError &&
-                deviceResult.Data != null &&
-                deviceResult.Data.Rows.Count > 0)
+              deviceResult.Data != null &&
+              deviceResult.Data.Rows.Count > 0)
             {
                 deviceID =
-                    Convert.ToInt32(
-                        deviceResult.Data.Rows[0]["DeviceID"]
-                    );
+                  Convert.ToInt32(
+                    deviceResult.Data.Rows[0]["DeviceID"]
+                  );
             }
 
             if (!isUpdateMode)
             {
                 string insertQuery =
-                    "INSERT INTO Payment " +
+                  "INSERT INTO Payment " +
 
-                    "(BookingID, " +
-                    "PaymentAmount, " +
-                    "PaymentMethod, " +
-                    "PaymentDate, " +
-                    "PaymentStatus, " +
-                    "CreatedAt) " +
+                  "(BookingID, " +
+                  "PaymentAmount, " +
+                  "PaymentMethod, " +
+                  "PaymentDate, " +
+                  "PaymentStatus, " +
+                  "CreatedAt) " +
 
-                    "VALUES (" +
+                  "VALUES (" +
 
-                    bookingID + ", " +
+                  bookingID + ", " +
 
-                    totalAmount + ", '" +
+                  totalAmount + ", '" +
 
-                    paymentMethod.Replace("'", "''") + "', '" +
+                  paymentMethod.Replace("'", "''") + "', '" +
 
-                    paymentDate + "', '" +
+                  paymentDate + "', '" +
 
-                    paymentStatus + "', '" +
+                  paymentStatus + "', '" +
 
-                    createdAt + "')";
+                  createdAt + "')";
 
                 ResultSet result =
-                    db.ExecuteNonQuery(insertQuery);
+                  db.ExecuteNonQuery(insertQuery);
 
                 if (result.HasError)
                 {
                     MessageBox.Show(
-                        result.Message,
-                        "Payment Failed",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
+                      result.Message,
+                      "Payment Failed",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Error
                     );
 
                     return;
                 }
             }
-
             else
             {
                 ResultSet statusResult =
-                    db.GetQueryData(
+                  db.GetQueryData(
 
                     "SELECT PaymentStatus " +
                     "FROM Payment " +
                     "WHERE PaymentID=" + paymentID
-                );
+                  );
 
                 if (!statusResult.HasError &&
-                    statusResult.Data != null &&
-                    statusResult.Data.Rows.Count > 0)
+                  statusResult.Data != null &&
+                  statusResult.Data.Rows.Count > 0)
                 {
                     string currentStatus =
-                        statusResult.Data.Rows[0]["PaymentStatus"].ToString();
+                      statusResult.Data.Rows[0]["PaymentStatus"].ToString();
 
                     if (currentStatus == "Paid" &&
-                        paymentStatus != "Paid")
+                      paymentStatus != "Paid")
                     {
                         MessageBox.Show(
-                            "Paid payments cannot be changed.",
-                            "Update Blocked",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Paid payments cannot be changed.",
+                          "Update Blocked",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
                     }
 
                     if (currentStatus == "Refunded" &&
-                        paymentStatus == "Paid")
+                      paymentStatus == "Paid")
                     {
                         MessageBox.Show(
-                            "Refunded payments cannot be changed to Paid.",
-                            "Update Blocked",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Refunded payments cannot be changed to Paid.",
+                          "Update Blocked",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
                     }
 
                     if (currentStatus == "Pending" &&
-                        paymentStatus == "Refunded")
+                      paymentStatus == "Refunded")
                     {
                         MessageBox.Show(
-                            "Pending payments cannot be changed to Refunded.",
-                            "Update Blocked",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
+                          "Pending payments cannot be changed to Refunded.",
+                          "Update Blocked",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Warning
                         );
 
                         return;
@@ -516,34 +509,34 @@ namespace GamingCafeAsset_InventorySystem
                 }
 
                 string updateQuery =
-                    "UPDATE Payment SET " +
+                  "UPDATE Payment SET " +
 
-                    "BookingID=" + bookingID + ", " +
+                  "BookingID=" + bookingID + ", " +
 
-                    "PaymentAmount=" + totalAmount + ", " +
+                  "PaymentAmount=" + totalAmount + ", " +
 
-                    "PaymentMethod='" +
-                    paymentMethod.Replace("'", "''") + "', " +
+                  "PaymentMethod='" +
+                  paymentMethod.Replace("'", "''") + "', " +
 
-                    "PaymentDate='" +
-                    paymentDate + "', " +
+                  "PaymentDate='" +
+                  paymentDate + "', " +
 
-                    "PaymentStatus='" +
-                    paymentStatus + "' " +
+                  "PaymentStatus='" +
+                  paymentStatus + "' " +
 
-                    "WHERE PaymentID=" +
-                    paymentID;
+                  "WHERE PaymentID=" +
+                  paymentID;
 
                 ResultSet result =
-                    db.ExecuteNonQuery(updateQuery);
+                  db.ExecuteNonQuery(updateQuery);
 
                 if (result.HasError)
                 {
                     MessageBox.Show(
-                        result.Message,
-                        "Update Failed",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
+                      result.Message,
+                      "Update Failed",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Error
                     );
 
                     return;
@@ -551,77 +544,74 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             string bookingStatus =
-                "Completed";
+              "Completed";
 
             string deviceStatus =
-                "Available";
+              "Available";
 
             if (paymentStatus == "Pending")
             {
                 bookingStatus =
-                    "Active";
+                  "Active";
 
                 deviceStatus =
-                    "Occupied";
+                  "Occupied";
             }
-
             else if (paymentStatus == "Refunded")
             {
                 bookingStatus =
-                    "Cancelled";
+                  "Cancelled";
 
                 deviceStatus =
-                    "Available";
+                  "Available";
             }
-
             else if (paymentStatus == "Paid")
             {
                 bookingStatus =
-                    "Completed";
+                  "Completed";
 
                 deviceStatus =
-                    "Available";
+                  "Available";
             }
 
             db.ExecuteNonQuery(
 
-                "UPDATE Booking SET " +
+              "UPDATE Booking SET " +
 
-                "BookingStatus='" +
-                bookingStatus + "' " +
+              "BookingStatus='" +
+              bookingStatus + "' " +
 
-                "WHERE BookingID=" +
-                bookingID
+              "WHERE BookingID=" +
+              bookingID
             );
 
             db.ExecuteNonQuery(
 
-                "UPDATE Device SET " +
+              "UPDATE Device SET " +
 
-                "Status='" +
-                deviceStatus + "' " +
+              "Status='" +
+              deviceStatus + "' " +
 
-                "WHERE DeviceID=" +
-                deviceID
+              "WHERE DeviceID=" +
+              deviceID
             );
 
             if (!isUpdateMode)
             {
                 MessageBox.Show(
-                    "Payment created successfully!",
-                    "Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                  "Payment created successfully!",
+                  "Success",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Information
                 );
             }
-
             else
             {
                 MessageBox.Show(
-                    "Payment updated successfully!",
-                    "Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                  "Payment updated successfully!",
+                  "Success",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Information
                 );
             }
 
@@ -653,19 +643,19 @@ namespace GamingCafeAsset_InventorySystem
             rbtnRefund.Checked = false;
 
             dtpDop.Value =
-                DateTime.Now;
+              DateTime.Now;
         }
 
         private void btnReset_Click(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             ResetScreen();
         }
 
         private void btnCancel_Click(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             this.Close();
         }

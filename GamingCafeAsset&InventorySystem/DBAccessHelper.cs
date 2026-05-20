@@ -87,7 +87,7 @@ namespace GamingCafeAsset_InventorySystem
 
             return resultSet;
         }
-        
+
         public ResultSet ExecuteNonQuery(string query)
         {
             var resultSet = new ResultSet();

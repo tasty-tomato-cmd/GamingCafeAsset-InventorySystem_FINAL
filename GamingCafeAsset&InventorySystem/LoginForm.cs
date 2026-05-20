@@ -20,7 +20,6 @@ namespace GamingCafeAsset_InventorySystem
             txtUser.Focus();
         }
 
-
         private void btnLogin_MouseEnter(object sender, EventArgs e)
         {
             btnLogin.BackColor =
@@ -32,7 +31,6 @@ namespace GamingCafeAsset_InventorySystem
             btnLogin.BackColor =
               Color.FromArgb(220, 60, 90);
         }
-
 
         private void btnHidepass_Click(object sender, EventArgs e)
         {
@@ -54,7 +52,6 @@ namespace GamingCafeAsset_InventorySystem
             }
         }
 
-
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string userName =
@@ -62,7 +59,6 @@ namespace GamingCafeAsset_InventorySystem
 
             string passWord =
               txtPass.Text;
-
 
             if (string.IsNullOrWhiteSpace(userName) &&
               string.IsNullOrWhiteSpace(passWord))
@@ -101,7 +97,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-
             try
             {
                 DBAccessHelper db =
@@ -117,7 +112,6 @@ namespace GamingCafeAsset_InventorySystem
                 ResultSet res =
                   db.GetQueryData(query);
 
-
                 if (res.HasError)
                 {
                     MessageBox.Show(
@@ -129,7 +123,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     return;
                 }
-
 
                 if (res.Data != null &&
                   res.Data.Rows.Count > 0)
@@ -176,7 +169,6 @@ namespace GamingCafeAsset_InventorySystem
                       res.Data.Rows[0]["LastName"]
                       .ToString();
 
-
                     if (user.UserTypeID == 1)
                     {
                         user.UserTypeName =
@@ -192,7 +184,6 @@ namespace GamingCafeAsset_InventorySystem
                         user.UserTypeName =
                           "Staff";
                     }
-
 
                     MessageBox.Show(
                       "Login successful!",
@@ -210,7 +201,6 @@ namespace GamingCafeAsset_InventorySystem
 
                     this.Show();
                 }
-
                 else
                 {
                     MessageBox.Show(
@@ -227,7 +217,6 @@ namespace GamingCafeAsset_InventorySystem
                     txtUser.Focus();
                 }
             }
-
             catch (Exception exp)
             {
                 MessageBox.Show(

@@ -13,7 +13,6 @@ namespace GamingCafeAsset_InventorySystem
 {
     public partial class UpdateUserForm : Form
     {
-        
 
         private int userID;
 
@@ -33,7 +32,6 @@ namespace GamingCafeAsset_InventorySystem
         )
         {
             InitializeComponent();
-
 
             userID = id;
 
@@ -55,12 +53,10 @@ namespace GamingCafeAsset_InventorySystem
 
             dtpDob.Value = dob;
 
-
             if (role == "Admin")
             {
                 isEditingAdmin = true;
             }
-
 
             if (isActive == 1)
             {
@@ -73,18 +69,15 @@ namespace GamingCafeAsset_InventorySystem
 
             btnCreate.Text = "UPDATE ACCOUNT";
 
-
             lblPasswordHint.Text = "Leave blank to keep current password.";
 
             lblPasswordHint.ForeColor = Color.WhiteSmoke;
         }
 
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
 
         private void btnReset_Click(object sender, EventArgs e)
         {
@@ -121,7 +114,6 @@ namespace GamingCafeAsset_InventorySystem
             txtUser.Focus();
         }
 
-
         private void btnHidepass_Click(object sender, EventArgs e)
         {
             if (txtPass.PasswordChar == '\0')
@@ -141,7 +133,6 @@ namespace GamingCafeAsset_InventorySystem
                 txtPass.PasswordChar = '\0';
             }
         }
-
 
         private bool IsValidPassword(string password)
         {
@@ -181,14 +172,12 @@ namespace GamingCafeAsset_InventorySystem
 
                 return;
             }
-
             else if (IsValidPassword(txtPass.Text))
             {
                 lblPasswordHint.Text = "Strong password ✔";
 
                 lblPasswordHint.ForeColor = Color.LightGreen;
             }
-
             else
             {
                 lblPasswordHint.Text =
@@ -197,7 +186,6 @@ namespace GamingCafeAsset_InventorySystem
                 lblPasswordHint.ForeColor = Color.IndianRed;
             }
         }
-
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
@@ -240,7 +228,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-
             if (!string.IsNullOrWhiteSpace(password) && !IsValidPassword(password))
             {
                 MessageBox.Show(
@@ -265,7 +252,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-
             int userTypeID = 0;
 
             switch (role)
@@ -289,9 +275,7 @@ namespace GamingCafeAsset_InventorySystem
                     break;
             }
 
-
             DBAccessHelper db = new DBAccessHelper();
-
 
             ResultSet checkUser = db.GetQueryData(
 
@@ -312,7 +296,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-
             ResultSet checkEmail = db.GetQueryData(
 
               "SELECT * FROM Users " +
@@ -332,7 +315,6 @@ namespace GamingCafeAsset_InventorySystem
                 return;
             }
 
-
             if (!rbtnActive.Checked && !rbtnInactive.Checked)
             {
                 MessageBox.Show(
@@ -347,7 +329,6 @@ namespace GamingCafeAsset_InventorySystem
 
             int isActive = rbtnActive.Checked ? 1 : 0;
 
-
             if (!PhoneEmailValidation.IsValidPhone(phone))
             {
                 MessageBox.Show(
@@ -359,7 +340,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 return;
             }
-
 
             string query = "";
 
@@ -401,9 +381,7 @@ namespace GamingCafeAsset_InventorySystem
                   "WHERE UserID = " + userID;
             }
 
-
             ResultSet result = db.ExecuteNonQuery(query);
-
 
             if (result.HasError)
             {
@@ -416,7 +394,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 return;
             }
-
 
             MessageBox.Show(
               "User updated successfully.",
@@ -435,10 +412,10 @@ namespace GamingCafeAsset_InventorySystem
                 if (cbRoles.Text != "Admin")
                 {
                     MessageBox.Show(
-                        "Admin role cannot be changed.",
-                        "Restriction",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
+                      "Admin role cannot be changed.",
+                      "Restriction",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Information
                     );
 
                     cbRoles.Text = "Admin";
@@ -452,10 +429,10 @@ namespace GamingCafeAsset_InventorySystem
             if (cbRoles.Text == "Admin")
             {
                 MessageBox.Show(
-                    "Admin role cannot be assigned to users.",
-                    "Role Restriction",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
+                  "Admin role cannot be assigned to users.",
+                  "Role Restriction",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Information
                 );
 
                 btnCreate.Enabled = false;

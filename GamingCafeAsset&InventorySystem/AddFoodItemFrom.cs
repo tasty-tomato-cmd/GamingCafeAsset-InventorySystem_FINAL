@@ -14,7 +14,6 @@ namespace GamingCafeAsset_InventorySystem
         private int foodID;
         private int bookingID;
 
-
         public AddFoodItemForm(LoggedInUser user)
         {
             InitializeComponent();
@@ -37,14 +36,13 @@ namespace GamingCafeAsset_InventorySystem
             UpdateFoodPrice();
         }
 
-
         public AddFoodItemForm(
-            LoggedInUser user,
-            int foodID,
-            int bookingID,
-            string foodName,
-            double price,
-            int quantity)
+          LoggedInUser user,
+          int foodID,
+          int bookingID,
+          string foodName,
+          double price,
+          int quantity)
         {
             InitializeComponent();
 
@@ -88,20 +86,19 @@ namespace GamingCafeAsset_InventorySystem
             cbCustomer.SelectedIndexChanged += cbCustomer_SelectedIndexChanged;
         }
 
-
         private void LoadActiveBookings()
         {
             DBAccessHelper db = new DBAccessHelper();
 
             string query =
-                "SELECT BookingID, CustomerName, BookingStatus " +
-                "FROM Booking " +
-                "WHERE BookingStatus='Active'";
+              "SELECT BookingID, CustomerName, BookingStatus " +
+              "FROM Booking " +
+              "WHERE BookingStatus='Active'";
 
             ResultSet result = db.GetQueryData(query);
 
             if (!result.HasError &&
-                result.Data != null)
+              result.Data != null)
             {
                 cbCustomer.DataSource = result.Data;
 
@@ -223,7 +220,6 @@ namespace GamingCafeAsset_InventorySystem
             cbCustomer.SelectedValue = bookingID;
         }
 
-
         private void DetectAndSelectFood(string foodName)
         {
             string[] foods = foodName.Split(',');
@@ -236,12 +232,10 @@ namespace GamingCafeAsset_InventorySystem
                 {
                     cbFastFood.SelectedItem = food;
                 }
-
                 else if (cbSnacks.Items.Contains(food))
                 {
                     cbSnacks.SelectedItem = food;
                 }
-
                 else if (cbDrinks.Items.Contains(food))
                 {
                     cbDrinks.SelectedItem = food;
@@ -284,22 +278,22 @@ namespace GamingCafeAsset_InventorySystem
         private void UpdateFoodPrice()
         {
             double fastFoodPrice =
-                GetFoodPrice(cbFastFood.Text);
+              GetFoodPrice(cbFastFood.Text);
 
             double snacksPrice =
-                GetFoodPrice(cbSnacks.Text);
+              GetFoodPrice(cbSnacks.Text);
 
             double drinksPrice =
-                GetFoodPrice(cbDrinks.Text);
+              GetFoodPrice(cbDrinks.Text);
 
             txtPriceFastFood.Text =
-                fastFoodPrice.ToString("0.00");
+              fastFoodPrice.ToString("0.00");
 
             txtPriceSnacks.Text =
-                snacksPrice.ToString("0.00");
+              snacksPrice.ToString("0.00");
 
             txtPriceDrinks.Text =
-                drinksPrice.ToString("0.00");
+              drinksPrice.ToString("0.00");
 
             int quantity = 1;
 
@@ -309,24 +303,24 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             double total =
-                (fastFoodPrice +
-                 snacksPrice +
-                 drinksPrice) * quantity;
+              (fastFoodPrice +
+                snacksPrice +
+                drinksPrice) * quantity;
 
             txtTotalPrice.Text =
-                total.ToString("0.00");
+              total.ToString("0.00");
         }
 
         private void InsertFoodCategories(
-            int selectedFoodID)
+          int selectedFoodID)
         {
 
             if (!string.IsNullOrWhiteSpace(
                 cbFastFood.Text))
             {
                 InsertCategoryMap(
-                    selectedFoodID,
-                    "Fast Food"
+                  selectedFoodID,
+                  "Fast Food"
                 );
             }
 
@@ -334,8 +328,8 @@ namespace GamingCafeAsset_InventorySystem
                 cbSnacks.Text))
             {
                 InsertCategoryMap(
-                    selectedFoodID,
-                    "Snacks"
+                  selectedFoodID,
+                  "Snacks"
                 );
             }
 
@@ -343,82 +337,82 @@ namespace GamingCafeAsset_InventorySystem
                 cbDrinks.Text))
             {
                 InsertCategoryMap(
-                    selectedFoodID,
-                    "Drinks"
+                  selectedFoodID,
+                  "Drinks"
                 );
             }
         }
 
         private void InsertCategoryMap(
-            int selectedFoodID,
-            string categoryName)
+          int selectedFoodID,
+          string categoryName)
         {
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             string categoryQuery =
-                "SELECT TOP 1 CategoryID " +
-                "FROM FoodCategory " +
-                "WHERE CategoryName='" +
-                categoryName.Replace("'", "''") + "'";
+              "SELECT TOP 1 CategoryID " +
+              "FROM FoodCategory " +
+              "WHERE CategoryName='" +
+              categoryName.Replace("'", "''") + "'";
 
             ResultSet categoryResult =
-                db.GetQueryData(categoryQuery);
+              db.GetQueryData(categoryQuery);
 
             if (!categoryResult.HasError &&
-                categoryResult.Data != null &&
-                categoryResult.Data.Rows.Count > 0)
+              categoryResult.Data != null &&
+              categoryResult.Data.Rows.Count > 0)
             {
                 int categoryID =
-                    Convert.ToInt32(
-                        categoryResult.Data.Rows[0]["CategoryID"]
-                    );
+                  Convert.ToInt32(
+                    categoryResult.Data.Rows[0]["CategoryID"]
+                  );
 
                 string mapQuery =
-                    "INSERT INTO FoodItemCategory " +
-                    "(FoodID, CategoryID) " +
-                    "VALUES (" +
-                    selectedFoodID + ", " +
-                    categoryID + ")";
+                  "INSERT INTO FoodItemCategory " +
+                  "(FoodID, CategoryID) " +
+                  "VALUES (" +
+                  selectedFoodID + ", " +
+                  categoryID + ")";
 
                 db.ExecuteNonQuery(mapQuery);
             }
         }
 
         private void cbFastFood_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             UpdateFoodSummary();
             UpdateFoodPrice();
         }
 
         private void cbSnacks_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             UpdateFoodSummary();
             UpdateFoodPrice();
         }
 
         private void cbDrinks_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             UpdateFoodSummary();
             UpdateFoodPrice();
         }
 
         private void txtQuantity_TextChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             UpdateFoodPrice();
         }
 
         private void cbCustomer_SelectedIndexChanged(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             if (cbCustomer.SelectedValue == null)
             {
@@ -433,48 +427,48 @@ namespace GamingCafeAsset_InventorySystem
             }
 
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             string query =
-                "SELECT CustomerName, BookingStatus " +
-                "FROM Booking " +
-                "WHERE BookingID=" +
-                selectedBookingID;
+              "SELECT CustomerName, BookingStatus " +
+              "FROM Booking " +
+              "WHERE BookingID=" +
+              selectedBookingID;
 
             ResultSet result =
-                db.GetQueryData(query);
+              db.GetQueryData(query);
         }
         private void CheckBookingStatus()
         {
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             string query =
-                "SELECT BookingStatus " +
-                "FROM Booking " +
-                "WHERE BookingID = " + bookingID;
+              "SELECT BookingStatus " +
+              "FROM Booking " +
+              "WHERE BookingID = " + bookingID;
 
             ResultSet result =
-                db.GetQueryData(query);
+              db.GetQueryData(query);
 
             if (!result.HasError &&
-                result.Data != null &&
-                result.Data.Rows.Count > 0)
+              result.Data != null &&
+              result.Data.Rows.Count > 0)
             {
                 string status =
-                    result.Data.Rows[0]["BookingStatus"].ToString();
+                  result.Data.Rows[0]["BookingStatus"].ToString();
 
                 if (status == "Completed" ||
-                    status == "Cancelled")
+                  status == "Cancelled")
                 {
                     btnSave.Enabled = false;
 
                     MessageBox.Show(
-                        "This booking is already " + status +
-                        ". Food items cannot be updated.",
-                        "Editing Disabled",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
+                      "This booking is already " + status +
+                      ". Food items cannot be updated.",
+                      "Editing Disabled",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Information
                     );
                 }
             }
@@ -497,16 +491,16 @@ namespace GamingCafeAsset_InventorySystem
         }
 
         private void btnSave_Click(
-    object sender,
-    EventArgs e)
+          object sender,
+          EventArgs e)
         {
             string foodName =
-                txtFoodName.Text.Trim();
+              txtFoodName.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(foodName))
             {
                 MessageBox.Show(
-                    "Please select at least one food item."
+                  "Please select at least one food item."
                 );
 
                 return;
@@ -515,119 +509,118 @@ namespace GamingCafeAsset_InventorySystem
             if (cbCustomer.SelectedValue == null)
             {
                 MessageBox.Show(
-                    "Please select a customer."
+                  "Please select a customer."
                 );
 
                 return;
             }
 
             bookingID =
-                Convert.ToInt32(
-                    cbCustomer.SelectedValue
-                );
+              Convert.ToInt32(
+                cbCustomer.SelectedValue
+              );
 
             double totalPrice =
-                Convert.ToDouble(
-                    txtTotalPrice.Text
-                );
+              Convert.ToDouble(
+                txtTotalPrice.Text
+              );
 
             int quantity =
-                Convert.ToInt32(
-                    txtQuantity.Text
-                );
+              Convert.ToInt32(
+                txtQuantity.Text
+              );
 
             DBAccessHelper db =
-                new DBAccessHelper();
+              new DBAccessHelper();
 
             if (!isUpdateMode)
             {
                 string insertFoodQuery =
-                    "INSERT INTO FoodItem " +
-                    "(FoodName, Price, Quantity, BookingID) " +
-                    "VALUES ('" +
-                    foodName.Replace("'", "''") + "', " +
-                    totalPrice + ", " +
-                    quantity + ", " +
-                    bookingID + ")";
+                  "INSERT INTO FoodItem " +
+                  "(FoodName, Price, Quantity, BookingID) " +
+                  "VALUES ('" +
+                  foodName.Replace("'", "''") + "', " +
+                  totalPrice + ", " +
+                  quantity + ", " +
+                  bookingID + ")";
 
                 ResultSet result =
-                    db.ExecuteNonQuery(insertFoodQuery);
+                  db.ExecuteNonQuery(insertFoodQuery);
 
                 if (result.HasError)
                 {
                     MessageBox.Show(
-                        result.Message,
-                        "Error"
+                      result.Message,
+                      "Error"
                     );
 
                     return;
                 }
 
                 string getFoodIdQuery =
-                    "SELECT TOP 1 FoodID " +
-                    "FROM FoodItem " +
-                    "ORDER BY FoodID DESC";
+                  "SELECT TOP 1 FoodID " +
+                  "FROM FoodItem " +
+                  "ORDER BY FoodID DESC";
 
                 ResultSet foodIdResult =
-                    db.GetQueryData(getFoodIdQuery);
+                  db.GetQueryData(getFoodIdQuery);
 
                 int newFoodID =
-                    Convert.ToInt32(
-                        foodIdResult.Data.Rows[0]["FoodID"]
-                    );
+                  Convert.ToInt32(
+                    foodIdResult.Data.Rows[0]["FoodID"]
+                  );
 
                 InsertFoodCategories(newFoodID);
 
                 MessageBox.Show(
-                    "Food item added successfully!"
+                  "Food item added successfully!"
                 );
 
                 ResetScreen();
 
                 this.Close();
             }
-
             else
             {
                 string updateFoodQuery =
-                    "UPDATE FoodItem SET " +
-                    "FoodName='" +
-                    foodName.Replace("'", "''") + "', " +
+                  "UPDATE FoodItem SET " +
+                  "FoodName='" +
+                  foodName.Replace("'", "''") + "', " +
 
-                    "Price=" +
-                    totalPrice + ", " +
+                  "Price=" +
+                  totalPrice + ", " +
 
-                    "Quantity=" +
-                    quantity + ", " +
+                  "Quantity=" +
+                  quantity + ", " +
 
-                    "BookingID=" +
-                    bookingID + " " +
+                  "BookingID=" +
+                  bookingID + " " +
 
-                    "WHERE FoodID=" +
-                    foodID;
+                  "WHERE FoodID=" +
+                  foodID;
 
                 ResultSet result =
-                    db.ExecuteNonQuery(updateFoodQuery);
+                  db.ExecuteNonQuery(updateFoodQuery);
 
                 if (result.HasError)
                 {
                     MessageBox.Show(
-                        result.Message,
-                        "Error"
+                      result.Message,
+                      "Error"
                     );
 
                     return;
                 }
 
                 db.ExecuteNonQuery(
-                    "DELETE FROM FoodItemCategory " +
-                    "WHERE FoodID=" + foodID
+                  "DELETE FROM FoodItemCategory " +
+                  "WHERE FoodID=" + foodID
                 );
 
                 InsertFoodCategories(foodID);
 
                 MessageBox.Show(
-                    "Food item updated successfully!"
+                  "Food item updated successfully!"
                 );
 
                 ResetScreen();
@@ -637,15 +630,15 @@ namespace GamingCafeAsset_InventorySystem
         }
 
         private void btnReset_Click(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             ResetScreen();
         }
 
         private void btnCancel_Click(
-            object sender,
-            EventArgs e)
+          object sender,
+          EventArgs e)
         {
             this.Close();
         }

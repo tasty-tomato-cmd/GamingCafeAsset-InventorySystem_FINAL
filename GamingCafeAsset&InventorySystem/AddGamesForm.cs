@@ -136,10 +136,10 @@ namespace GamingCafeAsset_InventorySystem
             if (gameName.Length < 2 || gameName.All(char.IsDigit) || string.IsNullOrWhiteSpace(gameName))
             {
                 MessageBox.Show(
-                    "Please enter a valid game name!",
-                    "Invalid Game Name",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                  "Please enter a valid game name!",
+                  "Invalid Game Name",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
                 );
                 return;
             }
@@ -222,7 +222,6 @@ namespace GamingCafeAsset_InventorySystem
                 ResetScreen();
                 LoadGames();
             }
-
             else
             {
                 string query =

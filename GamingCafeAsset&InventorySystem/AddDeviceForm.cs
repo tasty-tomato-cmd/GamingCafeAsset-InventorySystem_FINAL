@@ -144,10 +144,10 @@ namespace GamingCafeAsset_InventorySystem
             if (!int.TryParse(location, out int locationNumber) || locationNumber <= 0)
             {
                 MessageBox.Show(
-                    "Location number must be a positive number!",
-                    "Invalid Location",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                  "Location number must be a positive number!",
+                  "Invalid Location",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
                 );
 
                 return;
@@ -156,10 +156,10 @@ namespace GamingCafeAsset_InventorySystem
             if (!double.TryParse(hourly, out double hourlyRate) || hourlyRate <= 0)
             {
                 MessageBox.Show(
-                    "Hourly rate must be a positive number!",
-                    "Invalid Hourly Rate",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                  "Hourly rate must be a positive number!",
+                  "Invalid Hourly Rate",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
                 );
 
                 return;
@@ -172,27 +172,26 @@ namespace GamingCafeAsset_InventorySystem
             if (!isUpdateMode)
             {
                 locationCheckQuery =
-    "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" + locationNumber + "'";
+                  "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" + locationNumber + "'";
             }
-
             else
             {
                 locationCheckQuery =
-    "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" +
-    locationNumber +
-    "' AND DeviceID != " + deviceID;
+                  "SELECT COUNT(*) FROM Device WHERE LocationNumber = '" +
+                  locationNumber +
+                  "' AND DeviceID != " + deviceID;
             }
 
             ResultSet locationCheck = db.GetQueryData(locationCheckQuery);
 
             if (locationCheck.Data != null &&
-                Convert.ToInt32(locationCheck.Data.Rows[0][0]) > 0)
+              Convert.ToInt32(locationCheck.Data.Rows[0][0]) > 0)
             {
                 MessageBox.Show(
-                    "Location number already exists!",
-                    "Duplicate Location",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
+                  "Location number already exists!",
+                  "Duplicate Location",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Warning
                 );
 
                 return;
@@ -214,7 +213,6 @@ namespace GamingCafeAsset_InventorySystem
 
             if (!isUpdateMode)
             {
-                
 
                 string query =
                   "INSERT INTO Device " +
@@ -260,7 +258,6 @@ namespace GamingCafeAsset_InventorySystem
             }
             else
             {
-
 
                 string query =
                   "UPDATE Device SET " +
