@@ -438,6 +438,19 @@ namespace GamingCafeAsset_InventorySystem
 
             txtSearch.Text = "Search " + btn.Text + "...";
 
+            if (currentUser.UserTypeName == "Manager")
+            {
+                if (btn.Text == "Games")
+                {
+                    btnDelete.Enabled = true;
+                }
+
+                else
+                {
+                    btnDelete.Enabled = false;
+                }
+            }
+
             switch (btn.Text)
             {
                 case "Users":
