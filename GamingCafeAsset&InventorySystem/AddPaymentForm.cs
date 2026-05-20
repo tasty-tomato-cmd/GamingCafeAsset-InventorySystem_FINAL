@@ -26,6 +26,8 @@ namespace GamingCafeAsset_InventorySystem
             PaymentEvents();
 
             ResetScreen();
+
+            rbtnRefund.Enabled = false;
         }
 
         public AddPaymentForm(
@@ -458,7 +460,13 @@ namespace GamingCafeAsset_InventorySystem
 
             else
             {
-                ResultSet statusResult = db.GetQueryData("SELECT PaymentStatus " + "FROM Payment " + "WHERE PaymentID=" + paymentID);
+                ResultSet statusResult =
+                    db.GetQueryData(
+
+                    "SELECT PaymentStatus " +
+                    "FROM Payment " +
+                    "WHERE PaymentID=" + paymentID
+                );
 
                 if (!statusResult.HasError &&
                     statusResult.Data != null &&
@@ -467,11 +475,37 @@ namespace GamingCafeAsset_InventorySystem
                     string currentStatus =
                         statusResult.Data.Rows[0]["PaymentStatus"].ToString();
 
-                    if (currentStatus == "Paid" ||
-                        currentStatus == "Refunded")
+                    if (currentStatus == "Paid" &&
+                        paymentStatus != "Paid")
                     {
                         MessageBox.Show(
-                            "Paid or refunded payments cannot be changed.",
+                            "Paid payments cannot be changed.",
+                            "Update Blocked",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
+                    }
+
+                    if (currentStatus == "Refunded" &&
+                        paymentStatus == "Paid")
+                    {
+                        MessageBox.Show(
+                            "Refunded payments cannot be changed to Paid.",
+                            "Update Blocked",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
+                    }
+
+                    if (currentStatus == "Pending" &&
+                        paymentStatus == "Refunded")
+                    {
+                        MessageBox.Show(
+                            "Pending payments cannot be changed to Refunded.",
                             "Update Blocked",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning

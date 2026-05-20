@@ -17,6 +17,8 @@ namespace GamingCafeAsset_InventorySystem
             ResetScreen();
 
             LoadDevices();
+
+            rbOccupied.Enabled = false;
         }
 
         private void DisableSorting()
@@ -212,6 +214,7 @@ namespace GamingCafeAsset_InventorySystem
 
             if (!isUpdateMode)
             {
+                
 
                 string query =
                   "INSERT INTO Device " +
@@ -257,6 +260,7 @@ namespace GamingCafeAsset_InventorySystem
             }
             else
             {
+
 
                 string query =
                   "UPDATE Device SET " +
