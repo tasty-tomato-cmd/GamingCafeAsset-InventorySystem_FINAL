@@ -26,3 +26,4 @@ namespace GamingCafeAsset_InventorySystem
         }
     }
 }
+
