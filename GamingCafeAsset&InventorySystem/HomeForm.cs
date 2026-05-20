@@ -1032,9 +1032,6 @@ namespace GamingCafeAsset_InventorySystem
                     break;
             }
 
-            // =====================================================
-            // RELOAD GRID
-            // =====================================================
 
             LoadCurrentModule();
         }
@@ -1263,9 +1260,6 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Food Items":
 
-                    // =====================================================
-                    // CHECK ROW SELECTION
-                    // =====================================================
 
                     if (dgvInfo.SelectedRows.Count == 0)
                     {
@@ -1279,15 +1273,9 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
-                    // =====================================================
-                    // GET SELECTED ROW
-                    // =====================================================
 
                     row = dgvInfo.SelectedRows[0];
 
-                    // =====================================================
-                    // SAFE VALUE HELPERS
-                    // =====================================================
 
                     if (!int.TryParse(
                         row.Cells["Food No."].Value?.ToString(),
@@ -1318,9 +1306,6 @@ namespace GamingCafeAsset_InventorySystem
                             row.Cells["Quantity"].Value?.ToString(),
                             out int q) ? q : 1;
 
-                    // =====================================================
-                    // OPEN UPDATE FORM
-                    // =====================================================
 
                     AddFoodItemForm updateFoodItemForm =
                         new AddFoodItemForm(
@@ -1537,13 +1522,97 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Bookings":
 
-                    MessageBox.Show(
-                      "Bookings cannot be deleted to preserve system history.\n\n" +
-                      "To remove a booking, change its status to 'Cancelled' or 'Completed'.",
-                      "Action Not Allowed",
-                      MessageBoxButtons.OK,
-                      MessageBoxIcon.Information
+                    int bookingID =
+                        Convert.ToInt32(
+                            dgvInfo.CurrentRow.Cells["Booking No."].Value
+                        );
+
+                    DBAccessHelper db =
+                        new DBAccessHelper();
+
+                    int deviceID = 0;
+
+                    ResultSet deviceResult =
+                        db.GetQueryData(
+
+                        "SELECT DeviceID " +
+
+                        "FROM Booking " +
+
+                        "WHERE BookingID=" + bookingID
                     );
+
+                    if (!deviceResult.HasError &&
+                        deviceResult.Data != null &&
+                        deviceResult.Data.Rows.Count > 0)
+                    {
+                        deviceID =
+                            Convert.ToInt32(
+                                deviceResult.Data.Rows[0]["DeviceID"]
+                            );
+                    }
+
+                    db.ExecuteNonQuery(
+
+                        "DELETE FROM FoodItemCategory " +
+
+                        "WHERE FoodID IN (" +
+
+                        "SELECT FoodID FROM FoodItem " +
+
+                        "WHERE BookingID=" + bookingID +
+
+                        ")"
+                    );
+
+                    db.ExecuteNonQuery(
+
+                        "DELETE FROM FoodItem " +
+
+                        "WHERE BookingID=" + bookingID
+                    );
+
+                    db.ExecuteNonQuery(
+
+                        "DELETE FROM Payment " +
+
+                        "WHERE BookingID=" + bookingID
+                    );
+
+                    result =
+                        db.ExecuteNonQuery(
+
+                        "DELETE FROM Booking " +
+
+                        "WHERE BookingID=" + bookingID
+                    );
+
+                    if (result.HasError)
+                    {
+                        MessageBox.Show(
+                            result.Message,
+                            "Delete Failed",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+
+                        return;
+                    }
+
+                    if (deviceID > 0)
+                    {
+                        new DataDeletionHelper()
+                            .SetDeviceStatus(deviceID, "Available");
+                    }
+
+                    MessageBox.Show(
+                        "Booking deleted successfully!",
+                        "Success",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information
+                    );
+
+                    LoadBookingsData();
 
                     break;
 
@@ -1565,7 +1634,7 @@ namespace GamingCafeAsset_InventorySystem
 
                     string deviceName = row.Cells["Device Name"].Value?.ToString() ?? "";
 
-                    DBAccessHelper db = new DBAccessHelper();
+                    db = new DBAccessHelper();
                     DataDeletionHelper helper = new DataDeletionHelper();
 
                     string statusQuery =
@@ -1729,15 +1798,97 @@ namespace GamingCafeAsset_InventorySystem
 
                 case "Payments":
 
-                    MessageBox.Show(
-                      "Payments cannot be deleted to preserve transaction history.\n\n" +
-                      "You can update the payment status to 'Paid', 'Pending', or 'Refunded' from the update screen instead.",
-                      "Delete Not Allowed",
-                      MessageBoxButtons.OK,
-                      MessageBoxIcon.Information
-                    );
+                    int paymentID =
+                        Convert.ToInt32(
+                            dgvInfo.CurrentRow.Cells["Payment No."].Value
+                        );
 
-                    return;
+                    bookingID =
+                        Convert.ToInt32(
+                            dgvInfo.CurrentRow.Cells["Booking No."].Value
+                        );
+
+                    confirm =
+                        MessageBox.Show(
+                            "Are you sure you want to delete this payment?",
+                            "Confirm Delete",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning
+                        );
+
+                    if (confirm == DialogResult.Yes)
+                    {
+                        db =
+                            new DBAccessHelper();
+
+                        deviceID = 0;
+
+                        deviceResult =
+                            db.GetQueryData(
+
+                            "SELECT DeviceID " +
+
+                            "FROM Booking " +
+
+                            "WHERE BookingID=" + bookingID
+                        );
+
+                        if (!deviceResult.HasError &&
+                            deviceResult.Data != null &&
+                            deviceResult.Data.Rows.Count > 0)
+                        {
+                            deviceID =
+                                Convert.ToInt32(
+                                    deviceResult.Data.Rows[0]["DeviceID"]
+                                );
+                        }
+
+                        result =
+                            db.ExecuteNonQuery(
+
+                            "DELETE FROM Payment " +
+
+                            "WHERE PaymentID=" + paymentID
+                        );
+
+                        if (result.HasError)
+                        {
+                            MessageBox.Show(
+                                result.Message,
+                                "Delete Failed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+
+                            return;
+                        }
+
+                        db.ExecuteNonQuery(
+
+                            "UPDATE Booking SET " +
+
+                            "BookingStatus='Active' " +
+
+                            "WHERE BookingID=" + bookingID
+                        );
+
+                        if (deviceID > 0)
+                        {
+                            new DataDeletionHelper()
+                                .SetDeviceStatus(deviceID, "Occupied");
+                        }
+
+                        MessageBox.Show(
+                            "Payment deleted successfully!",
+                            "Success",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+
+                        LoadPaymentsData();
+                    }
+
+                    break;
 
                 case "Games":
 
