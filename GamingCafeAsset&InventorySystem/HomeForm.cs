@@ -27,6 +27,13 @@ namespace GamingCafeAsset_InventorySystem
                 dgvInfo.ClearSelection();
                 dgvInfo.CurrentCell = null;
             };
+            /*dgvInfo.DataBindingComplete += dgvInfo_DataBindingComplete;
+
+                private void dgvInfo_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+            {
+                dgvInfo.ClearSelection();
+            dgvInfo.CurrentCell = null;
+            }*/
 
             currentUser = user;
 
