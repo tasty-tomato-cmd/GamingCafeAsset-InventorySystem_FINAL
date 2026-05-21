@@ -494,6 +494,19 @@ namespace GamingCafeAsset_InventorySystem
                         return;
                     }
 
+                    if (currentStatus == "Refunded" &&
+                        paymentStatus != "Refunded")
+                    {
+                        MessageBox.Show(
+                            "Refunded payments cannot be changed.",
+                            "Update Blocked",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+
+                        return;
+                    }
+
                     if (currentStatus == "Pending" &&
                       paymentStatus == "Refunded")
                     {
