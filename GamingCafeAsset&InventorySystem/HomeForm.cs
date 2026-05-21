@@ -32,7 +32,7 @@ namespace GamingCafeAsset_InventorySystem
                 private void dgvInfo_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
             {
                 dgvInfo.ClearSelection();
-            dgvInfo.CurrentCell = null;
+                dgvInfo.CurrentCell = null;
             }*/
 
             currentUser = user;
